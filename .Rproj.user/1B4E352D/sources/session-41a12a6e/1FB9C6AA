@@ -1,0 +1,28 @@
+{
+    "id": "1FB9C6AA",
+    "path": "~/DSE_R_Project/Notebook.Rmd",
+    "project_path": "Notebook.Rmd",
+    "type": "r_markdown",
+    "hash": "0",
+    "contents": "",
+    "dirty": true,
+    "created": 1702494025070.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "tempName": "Untitled1",
+        "chunk_output_type": "inline",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "20,3",
+        "scrollLine": "11"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1702494181,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1702494830218,
+    "read_only": false,
+    "read_only_alternatives": []
+}
