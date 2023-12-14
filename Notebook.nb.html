@@ -11,7 +11,7 @@
 
 
 
-<title>R Notebook</title>
+<title>A Zoom Into Data-Related Jobs</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -1746,37 +1746,81 @@ display: none;
 
 
 
-<h1 class="title toc-ignore">R Notebook</h1>
+<h1 class="title toc-ignore">A Zoom Into Data-Related Jobs</h1>
 
 </div>
 
 
 <!-- rnb-text-begin -->
-<p>This is an <a href="http://rmarkdown.rstudio.com">R Markdown</a>
-Notebook. When you execute code within the notebook, the results appear
-beneath the code.</p>
-<p>Try executing this chunk by clicking the <em>Run</em> button within
-the chunk or by placing your cursor inside it and pressing
-<em>Ctrl+Shift+Enter</em>.</p>
+<p><strong>Name</strong>: Samaher Brahem</p>
+<p><strong>Course</strong>: Coding for DS &amp; DM - R Module</p>
+<p><strong>Professor</strong>: Giancarlo Manzi</p>
+<div id="introduction" class="section level3">
+<h3><strong>Introduction</strong></h3>
+<p>This study aims to analyze salary differences among Data Scientists
+and other Data-related roles across different countries. Utilizing a
+dataset containing diverse employment types, experience levels, and
+company sizes, the study intends to conduct statistical analyses and
+visualizations using R. The objective is to identify potential salary
+disparities and trends across various global contexts. The study aims to
+shed light on nuanced salary patterns within the data science domain,
+offering insights into the variations of compensation among data-related
+roles on a global scale.</p>
+</div>
+<div id="data-used" class="section level3">
+<h3><strong>Data Used</strong></h3>
+<p>The <em>Salary of Data Scientists</em> dataset will be used for this
+analysis. It is made available on <a href="https://www.kaggle.com/datasets/piyushborhade/salary-of-data-scientists">Kaggle</a>
+by the user, Piyush Borhade.</p>
+<p><strong>Features of the dataset</strong>:</p>
+<ul>
+<li><p><code>work_year</code>: The year the salary was paid.</p></li>
+<li><p><code>experience_level</code>: The level of work experience
+during the year</p></li>
+<li><p><code>employment_type</code>: the type of employment for the
+role</p></li>
+<li><p><code>job_title</code>: The job in which you worked during the
+year.</p></li>
+<li><p><code>salary</code>: The total gross amount of salary
+paid.</p></li>
+<li><p><code>salary_currency</code>: The currency of the salary paid as
+an ISO 4217 currency code.</p></li>
+<li><p><code>salarioinusd</code>: The salary in USD</p></li>
+<li><p><code>employee_residence</code>: the country of primary residence
+of the employee during the employment year as an ISO 3166 country
+code.</p></li>
+<li><p><code>remote_ratio</code>: The total amount of work done
+remotely</p></li>
+<li><p><code>company_location</code>: The country of headquarters of the
+employer or contracting branch</p></li>
+<li><p><code>company_size</code>: The average number of people who
+worked for the company during the year</p></li>
+</ul>
+<p><strong>Limits of the dataset</strong>:</p>
+<ol style="list-style-type: decimal">
+<li>No Shared Sources:</li>
+</ol>
+<p>The information about how the data was collected and who collected it
+isn’t clear. This lack of clarity raises doubts about how dependable the
+data is.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>Geographical Bias:</li>
+</ol>
+<p>The dataset primarily comprises data from the United States,
+resulting in an imbalance where other countries are underrepresented.
+This skew might limit the depth and accuracy of analyses, potentially
+leading to an overemphasis on American-centric insights and a lack of
+comprehensive understanding regarding other regions or global
+perspectives.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxvdChjYXJzKVxuYGBgIn0= -->
 <pre class="r"><code>plot(cars)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Add a new chunk by clicking the <em>Insert Chunk</em> button on the
-toolbar or by pressing <em>Ctrl+Alt+I</em>.</p>
-<p>When you save the notebook, an HTML file containing the code and
-output will be saved alongside it (click the <em>Preview</em> button or
-press <em>Ctrl+Shift+K</em> to preview the HTML file).</p>
-<p>The preview shows you a rendered HTML copy of the contents of the
-editor. Consequently, unlike <em>Knit</em>, <em>Preview</em> does not
-run any R code chunks. Instead, the output of the chunk when it was last
-run in the editor is displayed.</p>
-<!-- rnb-text-end -->
+</div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQpUaGlzIGlzIGFuIFtSIE1hcmtkb3duXShodHRwOi8vcm1hcmtkb3duLnJzdHVkaW8uY29tKSBOb3RlYm9vay4gV2hlbiB5b3UgZXhlY3V0ZSBjb2RlIHdpdGhpbiB0aGUgbm90ZWJvb2ssIHRoZSByZXN1bHRzIGFwcGVhciBiZW5lYXRoIHRoZSBjb2RlLiANCg0KVHJ5IGV4ZWN1dGluZyB0aGlzIGNodW5rIGJ5IGNsaWNraW5nIHRoZSAqUnVuKiBidXR0b24gd2l0aGluIHRoZSBjaHVuayBvciBieSBwbGFjaW5nIHlvdXIgY3Vyc29yIGluc2lkZSBpdCBhbmQgcHJlc3NpbmcgKkN0cmwrU2hpZnQrRW50ZXIqLiANCg0KYGBge3J9DQpwbG90KGNhcnMpDQpgYGANCg0KQWRkIGEgbmV3IGNodW5rIGJ5IGNsaWNraW5nIHRoZSAqSW5zZXJ0IENodW5rKiBidXR0b24gb24gdGhlIHRvb2xiYXIgb3IgYnkgcHJlc3NpbmcgKkN0cmwrQWx0K0kqLg0KDQpXaGVuIHlvdSBzYXZlIHRoZSBub3RlYm9vaywgYW4gSFRNTCBmaWxlIGNvbnRhaW5pbmcgdGhlIGNvZGUgYW5kIG91dHB1dCB3aWxsIGJlIHNhdmVkIGFsb25nc2lkZSBpdCAoY2xpY2sgdGhlICpQcmV2aWV3KiBidXR0b24gb3IgcHJlc3MgKkN0cmwrU2hpZnQrSyogdG8gcHJldmlldyB0aGUgSFRNTCBmaWxlKS4NCg0KVGhlIHByZXZpZXcgc2hvd3MgeW91IGEgcmVuZGVyZWQgSFRNTCBjb3B5IG9mIHRoZSBjb250ZW50cyBvZiB0aGUgZWRpdG9yLiBDb25zZXF1ZW50bHksIHVubGlrZSAqS25pdCosICpQcmV2aWV3KiBkb2VzIG5vdCBydW4gYW55IFIgY29kZSBjaHVua3MuIEluc3RlYWQsIHRoZSBvdXRwdXQgb2YgdGhlIGNodW5rIHdoZW4gaXQgd2FzIGxhc3QgcnVuIGluIHRoZSBlZGl0b3IgaXMgZGlzcGxheWVkLg0K</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkEgWm9vbSBJbnRvIERhdGEtUmVsYXRlZCBKb2JzIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQotLS0NCg0KDQoNCg0KKipOYW1lKio6IFNhbWFoZXIgQnJhaGVtIA0KDQoqKkNvdXJzZSoqOiBDb2RpbmcgZm9yIERTICYgRE0gLSBSIE1vZHVsZSANCg0KKipQcm9mZXNzb3IqKjogR2lhbmNhcmxvIE1hbnppDQoNCg0KIyMjICoqSW50cm9kdWN0aW9uKioNCg0KVGhpcyBzdHVkeSBhaW1zIHRvIGFuYWx5emUgc2FsYXJ5IGRpZmZlcmVuY2VzIGFtb25nIERhdGEgU2NpZW50aXN0cyBhbmQgb3RoZXIgRGF0YS1yZWxhdGVkIHJvbGVzIGFjcm9zcyBkaWZmZXJlbnQgY291bnRyaWVzLiBVdGlsaXppbmcgYSBkYXRhc2V0IGNvbnRhaW5pbmcgZGl2ZXJzZSBlbXBsb3ltZW50IHR5cGVzLCBleHBlcmllbmNlIGxldmVscywgYW5kIGNvbXBhbnkgc2l6ZXMsIHRoZSBzdHVkeSBpbnRlbmRzIHRvIGNvbmR1Y3Qgc3RhdGlzdGljYWwgYW5hbHlzZXMgYW5kIHZpc3VhbGl6YXRpb25zIHVzaW5nIFIuIFRoZSBvYmplY3RpdmUgaXMgdG8gaWRlbnRpZnkgcG90ZW50aWFsIHNhbGFyeSBkaXNwYXJpdGllcyBhbmQgdHJlbmRzIGFjcm9zcyB2YXJpb3VzIGdsb2JhbCBjb250ZXh0cy4gVGhlIHN0dWR5IGFpbXMgdG8gc2hlZCBsaWdodCBvbiBudWFuY2VkIHNhbGFyeSBwYXR0ZXJucyB3aXRoaW4gdGhlIGRhdGEgc2NpZW5jZSBkb21haW4sIG9mZmVyaW5nIGluc2lnaHRzIGludG8gdGhlIHZhcmlhdGlvbnMgb2YgY29tcGVuc2F0aW9uIGFtb25nIGRhdGEtcmVsYXRlZCByb2xlcyBvbiBhIGdsb2JhbCBzY2FsZS4NCg0KIyMjICoqRGF0YSBVc2VkKioNCg0KVGhlICpTYWxhcnkgb2YgRGF0YSBTY2llbnRpc3RzKiBkYXRhc2V0IHdpbGwgYmUgdXNlZCBmb3IgdGhpcyBhbmFseXNpcy4gSXQgaXMgbWFkZSBhdmFpbGFibGUgb24gW0thZ2dsZV0oaHR0cHM6Ly93d3cua2FnZ2xlLmNvbS9kYXRhc2V0cy9waXl1c2hib3JoYWRlL3NhbGFyeS1vZi1kYXRhLXNjaWVudGlzdHMpIGJ5IHRoZSB1c2VyLCBQaXl1c2ggQm9yaGFkZS4NCg0KKipGZWF0dXJlcyBvZiB0aGUgZGF0YXNldCoqOg0KDQotIGB3b3JrX3llYXJgOiBUaGUgeWVhciB0aGUgc2FsYXJ5IHdhcyBwYWlkLg0KDQotIGBleHBlcmllbmNlX2xldmVsYDogVGhlIGxldmVsIG9mIHdvcmsgZXhwZXJpZW5jZSBkdXJpbmcgdGhlIHllYXINCg0KLSBgZW1wbG95bWVudF90eXBlYDogdGhlIHR5cGUgb2YgZW1wbG95bWVudCBmb3IgdGhlIHJvbGUNCg0KLSBgam9iX3RpdGxlYDogVGhlIGpvYiBpbiB3aGljaCB5b3Ugd29ya2VkIGR1cmluZyB0aGUgeWVhci4NCg0KLSBgc2FsYXJ5YDogVGhlIHRvdGFsIGdyb3NzIGFtb3VudCBvZiBzYWxhcnkgcGFpZC4NCg0KLSBgc2FsYXJ5X2N1cnJlbmN5YDogVGhlIGN1cnJlbmN5IG9mIHRoZSBzYWxhcnkgcGFpZCBhcyBhbiBJU08gNDIxNyBjdXJyZW5jeSBjb2RlLg0KDQotIGBzYWxhcmlvaW51c2RgOiBUaGUgc2FsYXJ5IGluIFVTRA0KDQotIGBlbXBsb3llZV9yZXNpZGVuY2VgOiB0aGUgY291bnRyeSBvZiBwcmltYXJ5IHJlc2lkZW5jZSBvZiB0aGUgZW1wbG95ZWUgZHVyaW5nIHRoZSBlbXBsb3ltZW50IHllYXIgYXMgYW4gSVNPIDMxNjYgY291bnRyeSBjb2RlLg0KDQotIGByZW1vdGVfcmF0aW9gOiBUaGUgdG90YWwgYW1vdW50IG9mIHdvcmsgZG9uZSByZW1vdGVseQ0KDQotIGBjb21wYW55X2xvY2F0aW9uYDogVGhlIGNvdW50cnkgb2YgaGVhZHF1YXJ0ZXJzIG9mIHRoZSBlbXBsb3llciBvciBjb250cmFjdGluZyBicmFuY2gNCg0KLSBgY29tcGFueV9zaXplYDogVGhlIGF2ZXJhZ2UgbnVtYmVyIG9mIHBlb3BsZSB3aG8gd29ya2VkIGZvciB0aGUgY29tcGFueSBkdXJpbmcgdGhlIHllYXINCg0KDQoqKkxpbWl0cyBvZiB0aGUgZGF0YXNldCoqOg0KDQoxLiBObyBTaGFyZWQgU291cmNlczoNCg0KVGhlIGluZm9ybWF0aW9uIGFib3V0IGhvdyB0aGUgZGF0YSB3YXMgY29sbGVjdGVkIGFuZCB3aG8gY29sbGVjdGVkIGl0IGlzbid0IGNsZWFyLiBUaGlzIGxhY2sgb2YgY2xhcml0eSByYWlzZXMgZG91YnRzIGFib3V0IGhvdyBkZXBlbmRhYmxlIHRoZSBkYXRhIGlzLg0KDQoNCjIuIEdlb2dyYXBoaWNhbCBCaWFzOg0KDQpUaGUgZGF0YXNldCBwcmltYXJpbHkgY29tcHJpc2VzIGRhdGEgZnJvbSB0aGUgVW5pdGVkIFN0YXRlcywgcmVzdWx0aW5nIGluIGFuIGltYmFsYW5jZSB3aGVyZSBvdGhlciBjb3VudHJpZXMgYXJlIHVuZGVycmVwcmVzZW50ZWQuIFRoaXMgc2tldyBtaWdodCBsaW1pdCB0aGUgZGVwdGggYW5kIGFjY3VyYWN5IG9mIGFuYWx5c2VzLCBwb3RlbnRpYWxseSBsZWFkaW5nIHRvIGFuIG92ZXJlbXBoYXNpcyBvbiBBbWVyaWNhbi1jZW50cmljIGluc2lnaHRzIGFuZCBhIGxhY2sgb2YgY29tcHJlaGVuc2l2ZSB1bmRlcnN0YW5kaW5nIHJlZ2FyZGluZyBvdGhlciByZWdpb25zIG9yIGdsb2JhbCBwZXJzcGVjdGl2ZXMuDQoNCg0KYGBge3J9DQpwbG90KGNhcnMpDQpgYGANCg==</div>
 
 
 

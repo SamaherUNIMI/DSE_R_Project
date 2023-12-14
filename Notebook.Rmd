@@ -1,18 +1,63 @@
 ---
-title: "R Notebook"
+title: "A Zoom Into Data-Related Jobs"
 output: html_notebook
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+
+**Name**: Samaher Brahem 
+
+**Course**: Coding for DS & DM - R Module 
+
+**Professor**: Giancarlo Manzi
+
+
+### **Introduction**
+
+This study aims to analyze salary differences among Data Scientists and other Data-related roles across different countries. Utilizing a dataset containing diverse employment types, experience levels, and company sizes, the study intends to conduct statistical analyses and visualizations using R. The objective is to identify potential salary disparities and trends across various global contexts. The study aims to shed light on nuanced salary patterns within the data science domain, offering insights into the variations of compensation among data-related roles on a global scale.
+
+### **Data Used**
+
+The *Salary of Data Scientists* dataset will be used for this analysis. It is made available on [Kaggle](https://www.kaggle.com/datasets/piyushborhade/salary-of-data-scientists) by the user, Piyush Borhade.
+
+**Features of the dataset**:
+
+- `work_year`: The year the salary was paid.
+
+- `experience_level`: The level of work experience during the year
+
+- `employment_type`: the type of employment for the role
+
+- `job_title`: The job in which you worked during the year.
+
+- `salary`: The total gross amount of salary paid.
+
+- `salary_currency`: The currency of the salary paid as an ISO 4217 currency code.
+
+- `salarioinusd`: The salary in USD
+
+- `employee_residence`: the country of primary residence of the employee during the employment year as an ISO 3166 country code.
+
+- `remote_ratio`: The total amount of work done remotely
+
+- `company_location`: The country of headquarters of the employer or contracting branch
+
+- `company_size`: The average number of people who worked for the company during the year
+
+
+**Limits of the dataset**:
+
+1. No Shared Sources:
+
+The information about how the data was collected and who collected it isn't clear. This lack of clarity raises doubts about how dependable the data is.
+
+
+2. Geographical Bias:
+
+The dataset primarily comprises data from the United States, resulting in an imbalance where other countries are underrepresented. This skew might limit the depth and accuracy of analyses, potentially leading to an overemphasis on American-centric insights and a lack of comprehensive understanding regarding other regions or global perspectives.
+
 
 ```{r}
 plot(cars)
 ```
-
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
-
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
-
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
