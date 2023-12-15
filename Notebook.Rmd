@@ -13,15 +13,15 @@ output: html_notebook
 **Professor**: Giancarlo Manzi
 
 
-### **Introduction**
+### **1. Introduction**
 
 This study aims to analyze salary differences among Data Scientists and other Data-related roles across different countries. Utilizing a dataset containing diverse employment types, experience levels, and company sizes, the study intends to conduct statistical analyses and visualizations using R. The objective is to identify potential salary disparities and trends across various global contexts. The study aims to shed light on nuanced salary patterns within the data science domain, offering insights into the variations of compensation among data-related roles on a global scale.
 
-### **Data Used**
+### **2. Data Used**
 
 The *Salary of Data Scientists* dataset will be used for this analysis. It is made available on [Kaggle](https://www.kaggle.com/datasets/piyushborhade/salary-of-data-scientists) by the user, Piyush Borhade.
 
-**Features of the dataset**:
+**A. Features of the dataset**:
 
 - `work_year`: The year the salary was paid.
 
@@ -46,7 +46,7 @@ The *Salary of Data Scientists* dataset will be used for this analysis. It is ma
 - `company_size`: The average number of people who worked for the company during the year
 
 
-**Limits of the dataset**:
+**B. Limits of the dataset**:
 
 1. No Shared Sources:
 
@@ -58,6 +58,45 @@ The information about how the data was collected and who collected it isn't clea
 The dataset primarily comprises data from the United States, resulting in an imbalance where other countries are underrepresented. This skew might limit the depth and accuracy of analyses, potentially leading to an overemphasis on American-centric insights and a lack of comprehensive understanding regarding other regions or global perspectives.
 
 
+### **3. Data Processing**
+
+#### **3. 1 Installing packages and opening libraries:**
+
+- tidyverse
+
 ```{r}
-print("This project will be awesome!")
+library(tidyverse)
+
 ```
+
+#### **3.2 Importing the dataset:**
+
+```{r}
+# Importing the dataset from a local path in my computer
+data <- read.csv("C:/Users/Samaher/Documents/DSE_R_Project/data.csv")
+
+# Converting it into a tibble
+data <- as.tibble(data)
+
+```
+
+
+#### **3.3 Previewing the dataset:**
+
+```{r}
+# Understanding the structure of the dataset
+str(data)
+```
+
+```{r}
+# Displaying a sample of the data
+head(data)
+```
+
+
+#### **3.4 Cleaning and formatting the dataset:**
+
+### **4. Data Analysis**
+
+### **5. Conclusion**
+
