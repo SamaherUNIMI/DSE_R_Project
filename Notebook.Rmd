@@ -21,7 +21,7 @@ This study aims to analyze salary differences among Data Scientists and other Da
 
 The *Salary of Data Scientists* dataset will be used for this analysis. It is made available on [Kaggle](https://www.kaggle.com/datasets/piyushborhade/salary-of-data-scientists) by the user, Piyush Borhade.
 
-**A. Features of the dataset**:
+#### **2.1 Features of the dataset**:
 
 - `work_year`: The year the salary was paid.
 
@@ -46,14 +46,14 @@ The *Salary of Data Scientists* dataset will be used for this analysis. It is ma
 - `company_size`: The average number of people who worked for the company during the year
 
 
-**B. Limits of the dataset**:
+#### **2.2 Limits of the dataset**:
 
-1. No Shared Sources:
+##### **2.2.1 No Shared Sources**:
 
 The information about how the data was collected and who collected it isn't clear. This lack of clarity raises doubts about how dependable the data is.
 
+##### **2.2.2 Geographical Bias**:
 
-2. Geographical Bias:
 
 The dataset primarily comprises data from the United States, resulting in an imbalance where other countries are underrepresented. This skew might limit the depth and accuracy of analyses, potentially leading to an overemphasis on American-centric insights and a lack of comprehensive understanding regarding other regions or global perspectives.
 
@@ -92,7 +92,13 @@ str(data)
 # Displaying a sample of the data
 head(data)
 ```
+Now, let's check the dimensions of the dataset. 
 
+```{r}
+# Checking the dimensions of the dataset
+dim(data)
+```
+The dataset has 3753 rows and 12 columns. This means we have 12 variables and 3753 observations. 
 
 #### **3.4 Cleaning and formatting the dataset:**
 
@@ -398,7 +404,53 @@ The outcome is `FALSE`, so there no null values to deal with. Let's move to the 
 
 ### **4. Data Analysis**
 
-#### **4.1 Descriptive Analysis**
+#### **4.1 Exploratory Data Analysis (EDA)**
+
+##### **4.1.1 Overview and Summary Statistics**
+
+In this section, we will be examining the dataset's basic characteristics and computing summary statistics for better comprehension. 
+
+###### **4.1.1.1 Overview**
+
+Let's check again the dimensions and structure of the dataset after the the data processing phase. 
+
+```{r}
+dim(data)
+```
+The dataset now has 3753 rows (observations) and 10 columns (variables).
+
+Let's check the columns' names and the structure of the processed dataset.
+
+```{r}
+names(data)
+```
+```{r}
+str(data)
+```
+
+
+###### **4.1.1.2 Summary Statistics**
+
+In this section, let's calculate summary statistics like mean, median, standard deviation, minimum, maximum, and quartiles for numerical columns (`salary_in_eur`, `remote_ratio`).
+
+```{r}
+# Checking the summary statistics for the salary variable
+summary(data$salary_in_eur)
+```
+These statistics provide insights into the distribution of total gross salaries within the dataset. The minimum salary recorded is €4,721, while the maximum is €414,000. The median salary of €124,200 indicates that half of the recorded total gross salaries fall below this value and the other half above it. The mean salary (€126,499) is slightly higher than the median, indicating potential influence from higher salaries within the dataset. The interquartile range (IQR), between the 25th and 75th percentiles, spans from €87,400 to €161,000, encapsulating the middle 50% of the total gross salary data.
+
+
+```{r}
+# Checking the summary statistics for the remote ratio variable
+summary(data$remote_ratio)
+```
+This shows that most of the values are concentrated towards the lower end, as indicated by the median and the 1st quartile both being 0.00. However, 25% of the data involves entirely remote positions. This means there's a mix of roles, from no remote work to completely remote setups, in the dataset.
+
+##### **4.1.2 Univariate Analysis**
+
+##### **4.1.3 Bivariate Analysis**
+
+#### **4.2 Further Analysis (Based on EDA Findings)**
 
 
 ### **5. Conclusion**
