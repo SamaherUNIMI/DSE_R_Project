@@ -384,12 +384,21 @@ data$employee_residence <- er_country_mapping[data$employee_residence]
 
 ```
 
+##### **3.4.5 Checking for Missing Values:**
+
+After cleaning and formatting the data, I want to make sure there are no null values.
+
+```{r}
+# Making sure there are no missing values 
+any(is.na(data))
+```
+
+The outcome is `FALSE`, so there no null values to deal with. Let's move to the fun part!
 
 
 ### **4. Data Analysis**
 
-#### **4.1 Descriptive Analysis
-**
+#### **4.1 Descriptive Analysis**
 
 
 ### **5. Conclusion**
