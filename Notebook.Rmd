@@ -67,6 +67,9 @@ The dataset primarily comprises data from the United States, resulting in an imb
 ```{r}
 library(tidyverse)
 library(ggplot2)
+library(dplyr)
+library(sf)
+library(rnaturalearth)
 
 ```
 
@@ -451,7 +454,7 @@ This shows that most of the values are concentrated towards the lower end, as in
 
 ###### **4.1.2.1 Numerical Variables**
 
-** A. Salary Distribution**
+**A. Salary Distribution**
 
 
 ```{r}
@@ -463,7 +466,7 @@ ggplot(data, aes(x = salary_in_eur)) +
 ```
 The density plot for the `salary_in_eur` variable reaffirms the statistical observations derived from the summary statistics. It visually depicts a right-skewed distribution, indicating that the majority of salaries are concentrated on the lower end of the spectrum. There's a notable peak at the lower salary values, with a gradual decrease in density as salaries increase. While the plot indicates a rightward skewness, it also showcases a few instances of higher salaries, although these are notably less frequent in the dataset.
 
-** A. Remote Ratio Distribution**
+**B. Remote Ratio Distribution**
 
 ```{r}
 ggplot(data, aes(x = remote_ratio)) +
@@ -476,7 +479,7 @@ We can see that there are peaks at both ends (0% and 100%). The density plot rep
 
 ###### **4.1.2.2 Categorical Variables**
 
-** A. Company Size**
+**A. Company Size**
 
 
 ```{r}
@@ -504,7 +507,7 @@ ggplot(company_sizes_df, aes(x = "", y = frequency, fill = company_size)) +
 
 The data is composed mainly of medium sized companies with a percentage of 84%. In the 2nd place comes large companies with a percetage of 12%. Small companies represent the smallest category with only 4%.
 
-** B. Work Year**
+**B. Work Year**
 
 Let's do the same for the `work_year` variable.
 
@@ -527,6 +530,138 @@ ggplot(work_years_df, aes(x = "", y = frequency, fill = work_year)) +
 
 ```
 This pie chart depicts the dominance of 2023 and 2022 in the dataset compared to 2021 and 2020. 2023 has the most significant portion with 48%. 2022 follows with 44%. 2021 and 2020 have a relatively small representation in this data with the percentages 6% and 2% respectively.
+
+**C. Experience Level**
+
+```{r}
+# Creating a table of experience levels and their frequency
+experience_levels_freq <- table(data$experience_level)
+
+# Converting the table to a data frame
+experience_levels_df <- data.frame(experience_level = names(experience_levels_freq), frequency = as.numeric(experience_levels_freq))
+
+# Creating the pie chart for experience levels with percentages
+ggplot(experience_levels_df, aes(x = "", y = frequency, fill = experience_level)) +
+  geom_bar(stat = "identity", width = 1, color = "white") +
+  coord_polar("y", start = 0) +
+  labs(title = "Experience Level Distribution", fill = "Experience Level") +
+  theme_void() +
+  scale_fill_manual(values = custom_palette) +
+  geom_text(aes(label = paste0(round((frequency/sum(frequency)) * 100), "%")),
+            position = position_stack(vjust = 0.5), color = "white" )
+
+```
+The pie chart shows that most individuals, around 67%, are in senior positions. About 21% are in middle-level roles, while entry-level positions make up 9%. Executive roles are the smallest group, just 3% of the dataset.
+
+**D. Employment Type**
+
+```{r}
+# Creating a table of employment types and their frequency
+employment_types_freq <- table(data$employment_type)
+
+# Converting the table to a data frame
+employment_types_df <- data.frame(employment_type = names(employment_types_freq), frequency = as.numeric(employment_types_freq))
+
+# Creating the pie chart for employment types with percentages
+ggplot(employment_types_df, aes(x = "", y = frequency, fill = employment_type)) +
+  geom_bar(stat = "identity", width = 1, color = "white") +
+  coord_polar("y", start = 0) +
+  labs(title = "Employment Type Distribution", fill = "Employment Type") +
+  theme_void() +
+  scale_fill_manual(values = custom_palette) +
+  geom_text(aes(label = paste0(round((frequency/sum(frequency)) * 100), "%")),
+            position = position_stack(vjust = 0.5), color = "white" )
+
+```
+The majority of individuals, constituting approximately 99%, are categorized as "Full-time" employees. Now, let's dig a bit deeper to see the percentages of the other categories.
+
+```{r}
+# Calculating percentages
+employment_types_df$percentage <- round((employment_types_df$frequency / sum(employment_types_df$frequency)) * 100, 2)
+
+employment_types_df
+```
+
+This clarifies that part-time roles come in second with 0.45%. Lastly, we have both contract and freelance roles with 0.27% each.
+
+**E. Company Location**
+
+In this section, we will explore where the companies present in this dataset have their headquarters. For this purpose, I chose to visualize the countries on a map. Instead of using a linear scale, I will use a logarithmic scale for the frequency values. The logarithmic scaling helps highlight the distribution more evenly across the map, emphasizing the presence of multiple countries while downplaying the overwhelming frequency of the United States, enabling a clearer visual comparison of the dataset's geographic spread.
+
+```{r}
+# Creating a df that has the company locations along with their freq
+company_location_df <- data %>%
+  group_by(company_location) %>%
+  summarise(frequency = n())
+
+# Getting world map data
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Merging company_location_df with world map data
+map_data <- merge(world, company_location_df, by.x = "name", by.y = "company_location", all.x = TRUE)
+
+# Plotting
+ggplot() +
+  geom_sf(data = map_data, aes(fill = log(frequency + 1))) +
+  scale_fill_gradient(low = "#5bc8af", high = "#202060") +
+  theme_minimal()
+
+
+```
+The United States stands out as the most prominent location, reflecting a high occurrence frequency, followed by Canada, Spain, and several other countries that also have notable but comparatively lower representation.
+
+**F. Employee Residence**
+
+Let's do the same for `employee_residence`.
+
+```{r}
+# Creating a data frame with employee residence locations and their frequency
+employee_residence_df <- data %>%
+  group_by(employee_residence) %>%
+  summarise(frequency = n())
+
+# Getting world map data
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Merging employee_residence_df with world map data
+map_data_residence <- merge(world, employee_residence_df, by.x = "name", by.y = "employee_residence", all.x = TRUE)
+
+# Plotting
+ggplot() +
+  geom_sf(data = map_data_residence, aes(fill = log(frequency + 1))) +
+  scale_fill_gradient(low = "#5bc8af", high = "#202060") +
+  theme_minimal()
+
+```
+Looking at the distribution, it's apparent that the United States has the highest frequency, indicated by the darkest shade on the map. It's followed by Canada, Germany, the United Kingdom, and France, showing relatively high frequencies as well. The lighter shades across various countries denote lower frequencies. Countries such as Tunisia, Algeria, Iraq, Kuwait, American Samoa, Armenia, Bulgaria, Cyprus, Dominican Republic, Iran, Moldova, North Macedonia, Slovakia, and Uzbekistan have the lightest shades, representing the lowest frequency of employee residences.
+
+**G. Job Titles**
+
+In this section, we will see what are the 10 Job Titles present in this dataset.
+
+```{r}
+# Creating a table of job titles and their frequency
+job_titles_freq <- table(data$job_title)
+
+# Converting the table to a data frame and sort by frequency
+job_titles_df <- data.frame(job_title = names(job_titles_freq), frequency = as.numeric(job_titles_freq))
+job_titles_df <- job_titles_df[order(job_titles_df$frequency, decreasing = TRUE), ]
+
+# Calculating percentages
+job_titles_df$percentage <- (job_titles_df$frequency / sum(job_titles_df$frequency)) * 100
+
+# Selecting the top 10 most occurring job titles
+top_10_jobs <- head(job_titles_df, 10)
+
+
+# Creating a bar plot for the top 10 job titles with percentages on the y-axis
+ggplot(top_10_jobs, aes(x = reorder(job_title, -frequency), y = percentage)) +
+  geom_bar(stat = "identity", fill = "#5bc8af") +
+  labs(title = "Top 10 Most Occurring Job Titles", x = "Job Titles", y = "Percentage") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+The most dominant roles include "Data Engineer," "Data Scientist," and "Data Analyst," constituting a significant portion of the dataset's job titles. Additionally, positions like "Machine Learning Engineer," "Analytics Engineer," "Data Architect," and roles related to research, such as "Research Scientist" and "Research Engineer," also hold notable but comparatively smaller percentages.
 
 
 ##### **4.1.3 Bivariate Analysis**
