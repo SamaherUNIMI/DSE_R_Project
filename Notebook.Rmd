@@ -476,6 +476,59 @@ We can see that there are peaks at both ends (0% and 100%). The density plot rep
 
 ###### **4.1.2.2 Categorical Variables**
 
+** A. Company Size**
+
+
+```{r}
+
+# Creating a table of company sizes and their frequency
+company_sizes_freq <- table(data$company_size)
+
+# Converting the table to a data frame
+company_sizes_df <- data.frame(company_size = names(company_sizes_freq), frequency = as.numeric(company_sizes_freq))
+
+# Defining a custom color palette (this step is optional, but, they're my favorite colors)
+custom_palette <- c("#5bc8af","#202060", "#b030b0","#6c91bf", "#602080")
+
+# Creating the pie chart for company sizes with percentages
+ggplot(company_sizes_df, aes(x = "", y = frequency, fill = company_size)) +
+  geom_bar(stat = "identity", width = 1, color = "white") +
+  coord_polar("y", start = 0) +
+  labs(title = "Company Size Distribution", fill = "Company Size") +
+  theme_void() +
+  scale_fill_manual(values = custom_palette) +
+  geom_text(aes(label = paste0(round((frequency/sum(frequency)) * 100), "%")),
+            position = position_stack(vjust = 0.5), color = "white" )
+
+```
+
+The data is composed mainly of medium sized companies with a percentage of 84%. In the 2nd place comes large companies with a percetage of 12%. Small companies represent the smallest category with only 4%.
+
+** B. Work Year**
+
+Let's do the same for the `work_year` variable.
+
+```{r}
+# Creating a table of work years and their frequency
+work_years_freq <- table(data$work_year)
+
+# Converting the table to a data frame
+work_years_df <- data.frame(work_year = names(work_years_freq), frequency = as.numeric(work_years_freq))
+
+# Creating the pie chart for work years with percentages
+ggplot(work_years_df, aes(x = "", y = frequency, fill = work_year)) +
+  geom_bar(stat = "identity", width = 1, color = "white") +
+  coord_polar("y", start = 0) +
+  labs(title = "Work Year Distribution", fill = "Work Year") +
+  theme_void() +
+  scale_fill_manual(values = custom_palette) +
+  geom_text(aes(label = paste0(round((frequency/sum(frequency)) * 100), "%")),
+            position = position_stack(vjust = 0.5), color = "white" ) 
+
+```
+This pie chart depicts the dominance of 2023 and 2022 in the dataset compared to 2021 and 2020. 2023 has the most significant portion with 48%. 2022 follows with 44%. 2021 and 2020 have a relatively small representation in this data with the percentages 6% and 2% respectively.
+
+
 ##### **4.1.3 Bivariate Analysis**
 
 #### **4.2 Further Analysis (Based on EDA Findings)**
