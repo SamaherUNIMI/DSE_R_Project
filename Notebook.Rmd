@@ -73,7 +73,7 @@ library(tidyverse)
 
 ```{r}
 # Importing the dataset from a local path in my computer
-data <- read.csv("C:/Users/Samaher/Documents/DSE_R_Project/data.csv")
+data <- read.csv2("C:/Users/Samaher/Documents/DSE_R_Project/data.csv")
 
 # Converting it into a tibble
 data <- as.tibble(data)
@@ -387,6 +387,10 @@ data$employee_residence <- er_country_mapping[data$employee_residence]
 
 
 ### **4. Data Analysis**
+
+#### **4.1 Descriptive Analysis
+**
+
 
 ### **5. Conclusion**
 
