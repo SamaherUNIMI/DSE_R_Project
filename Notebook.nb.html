@@ -1785,7 +1785,7 @@ year.</p></li>
 paid.</p></li>
 <li><p><code>salary_currency</code>: The currency of the salary paid as
 an ISO 4217 currency code.</p></li>
-<li><p><code>salarioinusd</code>: The salary in USD</p></li>
+<li><p><code>salary_in_usd</code>: The salary in USD</p></li>
 <li><p><code>employee_residence</code>: the country of primary residence
 of the employee during the employment year as an ISO 3166 country
 code.</p></li>
@@ -1888,6 +1888,378 @@ head(data)</code></pre>
 </div>
 <div id="cleaning-and-formatting-the-dataset" class="section level4">
 <h4><strong>3.4 Cleaning and formatting the dataset:</strong></h4>
+<div id="experience-level" class="section level5">
+<h5><strong>3.4.1 Experience Level:</strong></h5>
+<p>There are 4 experience levels in this dataset:</p>
+<ul>
+<li><p>EN = Entry Level</p></li>
+<li><p>MI = Mid-Level</p></li>
+<li><p>SE = Senior</p></li>
+<li><p>EX = Executive</p></li>
+</ul>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFibGUoZGF0YSRleHBlcmllbmNlX2xldmVsKVxuYGBgIn0= -->
+<pre class="r"><code>table(data$experience_level)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG4gIEVOICAgRVggICBNSSAgIFNFIFxuIDMyMCAgMTE0ICA4MDUgMjUxNSBcbiJ9 -->
+<pre><code>
+  EN   EX   MI   SE 
+ 320  114  805 2515 </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Let’s make those levels understandable by anyone who reads them!</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBSZXBsYWNpbmcgYWJicmV2aWF0aW9ucyB3aXRoIGZ1bGwgZGVzY3JpcHRpb25zIGluIHRoZSAnZXhwZXJpZW5jZV9sZXZlbCcgY29sdW1uXG5kYXRhJGV4cGVyaWVuY2VfbGV2ZWwgPC0gaWZlbHNlKGRhdGEkZXhwZXJpZW5jZV9sZXZlbCA9PSBcIkVOXCIsIFwiZW50cnkgbGV2ZWxcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmZWxzZShkYXRhJGV4cGVyaWVuY2VfbGV2ZWwgPT0gXCJFWFwiLCBcImV4ZWN1dGl2ZVwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgaWZlbHNlKGRhdGEkZXhwZXJpZW5jZV9sZXZlbCA9PSBcIk1JXCIsIFwibWlkLWxldmVsXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICBpZmVsc2UoZGF0YSRleHBlcmllbmNlX2xldmVsID09IFwiU0VcIiwgXCJzZW5pb3JcIiwgZGF0YSRleHBlcmllbmNlX2xldmVsKSkpKVxuXG4jIENoZWNraW5nIHRoZSB1cGRhdGVkICdleHBlcmllbmNlX2xldmVsJyBjb2x1bW5cbnRhYmxlKGRhdGEkZXhwZXJpZW5jZV9sZXZlbClcbmBgYCJ9 -->
+<pre class="r"><code># Replacing abbreviations with full descriptions in the &#39;experience_level&#39; column
+data$experience_level &lt;- ifelse(data$experience_level == &quot;EN&quot;, &quot;entry level&quot;,
+                           ifelse(data$experience_level == &quot;EX&quot;, &quot;executive&quot;,
+                           ifelse(data$experience_level == &quot;MI&quot;, &quot;mid-level&quot;,
+                           ifelse(data$experience_level == &quot;SE&quot;, &quot;senior&quot;, data$experience_level))))
+
+# Checking the updated &#39;experience_level&#39; column
+table(data$experience_level)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5lbnRyeSBsZXZlbCAgIGV4ZWN1dGl2ZSAgIG1pZC1sZXZlbCAgICAgIHNlbmlvciBcbiAgICAgICAgMzIwICAgICAgICAgMTE0ICAgICAgICAgODA1ICAgICAgICAyNTE1IFxuIn0= -->
+<pre><code>
+entry level   executive   mid-level      senior 
+        320         114         805        2515 </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="employment-type" class="section level5">
+<h5><strong>3.4.2 Employment Type:</strong></h5>
+<p>There are 4 employment types in this dataset:</p>
+<ul>
+<li><p>FT = full-time</p></li>
+<li><p>PT = part-time</p></li>
+<li><p>CT = contract</p></li>
+<li><p>FL = freelance</p></li>
+</ul>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFibGUoZGF0YSRlbXBsb3ltZW50X3R5cGUpXG5gYGAifQ== -->
+<pre class="r"><code>table(data$employment_type)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG4gIENUICAgRkwgICBGVCAgIFBUIFxuICAxMCAgIDEwIDM3MTcgICAxNyBcbiJ9 -->
+<pre><code>
+  CT   FL   FT   PT 
+  10   10 3717   17 </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>I will replace those abbreviations with the full word for better
+readability.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBSZXBsYWNpbmcgYWJicmV2aWF0aW9ucyB3aXRoIGZ1bGwgZGVzY3JpcHRpb25zIGluIHRoZSAnZW1wbG95bWVudF90eXBlJyBjb2x1bW5cbmRhdGEkZW1wbG95bWVudF90eXBlIDwtIGlmZWxzZShkYXRhJGVtcGxveW1lbnRfdHlwZSA9PSBcIkNUXCIsIFwiY29udHJhY3RcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpZmVsc2UoZGF0YSRlbXBsb3ltZW50X3R5cGUgPT0gXCJGTFwiLCBcImZyZWVsYW5jZVwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpZmVsc2UoZGF0YSRlbXBsb3ltZW50X3R5cGUgPT0gXCJGVFwiLCBcImZ1bGwtdGltZVwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaWZlbHNlKGRhdGEkZW1wbG95bWVudF90eXBlID09IFwiUFRcIiwgXCJwYXJ0LXRpbWVcIiwgZGF0YSRlbXBsb3ltZW50X3R5cGUpKSkpXG5cbiMgQ2hlY2tpbmcgdGhlIHVwZGF0ZWQgJ2VtcGxveW1lbnRfdHlwZScgY29sdW1uXG50YWJsZShkYXRhJGVtcGxveW1lbnRfdHlwZSlcbmBgYCJ9 -->
+<pre class="r"><code># Replacing abbreviations with full descriptions in the &#39;employment_type&#39; column
+data$employment_type &lt;- ifelse(data$employment_type == &quot;CT&quot;, &quot;contract&quot;,
+                               ifelse(data$employment_type == &quot;FL&quot;, &quot;freelance&quot;,
+                                      ifelse(data$employment_type == &quot;FT&quot;, &quot;full-time&quot;,
+                                             ifelse(data$employment_type == &quot;PT&quot;, &quot;part-time&quot;, data$employment_type))))
+
+# Checking the updated &#39;employment_type&#39; column
+table(data$employment_type)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG4gY29udHJhY3QgZnJlZWxhbmNlIGZ1bGwtdGltZSBwYXJ0LXRpbWUgXG4gICAgICAgMTAgICAgICAgIDEwICAgICAgMzcxNyAgICAgICAgMTcgXG4ifQ== -->
+<pre><code>
+ contract freelance full-time part-time 
+       10        10      3717        17 </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="salaries" class="section level5">
+<h5><strong>3.4.3 Salaries:</strong></h5>
+<p>When it comes to salaries, we can see that there are 3 columns: 1.
+<code>salary</code> 2. <code>salary_currency</code> 3.
+<code>salary_in_usd</code></p>
+<p>The salaries, stored in <code>salary</code> column, are collected in
+local currencies, mentioned in <code>salary_currency</code> column.
+Then, all those salaries were converted to USD and stored in
+<code>salary_in_usd</code>.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFibGUoZGF0YSRzYWxhcnlfY3VycmVuY3kpXG5gYGAifQ== -->
+<pre class="r"><code>table(data$salary_currency)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG4gQVVEICBCUkwgIENBRCAgQ0hGICBDTFAgIENaSyAgREtLICBFVVIgIEdCUCAgSEtEICBIVUYgIElOUiAgSlBZICBNWE4gIFBMTiAgU0dEIFxuICAgOSAgICA2ICAgMjUgICAgNCAgICAxICAgIDEgICAgMyAgMjM2ICAxNjEgICAgMSAgICAzICAgNjAgICAgMyAgICAxICAgIDUgICAgNiBcbiBUSEIgIFRSWSAgVVNEIFxuICAgMiAgICAzIDMyMjQgXG4ifQ== -->
+<pre><code>
+ AUD  BRL  CAD  CHF  CLP  CZK  DKK  EUR  GBP  HKD  HUF  INR  JPY  MXN  PLN  SGD 
+   9    6   25    4    1    1    3  236  161    1    3   60    3    1    5    6 
+ THB  TRY  USD 
+   2    3 3224 </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>For the purpose of this study, it would be better to have the
+salaries in EUR. That’s why I will replace the
+<code>salary_in_usd</code> column with <code>salary_in_eur</code> and
+convert the salaries to EUR. I will also remove the <code>salary</code>
+and <code>salary_currecny</code> columns since they are no longer
+needed.</p>
+<p>The exchange rate for the conversion from USD to EUR is as
+follows:</p>
+<p>1 United States Dollar equals 0.92 Euro</p>
+<p>P.S. The date of this conversion is: Dec 16, 09:12 UTC</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBHaXZlbiBleGNoYW5nZSByYXRlXG5leGNoYW5nZV9yYXRlIDwtIDAuOTJcblxuIyBDb252ZXJ0aW5nIFVTRCBzYWxhcmllcyB0byBFVVJcbmRhdGEkc2FsYXJ5X2luX3VzZCA8LSBkYXRhJHNhbGFyeV9pbl91c2QgKiBleGNoYW5nZV9yYXRlXG5cbiMgQ2hhbmdpbmcgY29sdW1uIG5hbWUgdG8gYmV0dGVyIHJlZmxlY3QgdGhpcyBjaGFuZ2Vcbm5hbWVzKGRhdGEpW25hbWVzKGRhdGEpID09IFwic2FsYXJ5X2luX3VzZFwiXSA8LSBcInNhbGFyeV9pbl9ldXJcIlxuYGBgIn0= -->
+<pre class="r"><code># Given exchange rate
+exchange_rate &lt;- 0.92
+
+# Converting USD salaries to EUR
+data$salary_in_usd &lt;- data$salary_in_usd * exchange_rate
+
+# Changing column name to better reflect this change
+names(data)[names(data) == &quot;salary_in_usd&quot;] &lt;- &quot;salary_in_eur&quot;</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBSZW1vdmluZyB0aGUgc2FsYXJ5IGFuZCBzYWxhcnlfY3VycmVuY3kgY29sdW1uc1xuZGF0YSA8LSBzdWJzZXQoZGF0YSwgc2VsZWN0ID0gLWMoc2FsYXJ5LCBzYWxhcnlfY3VycmVuY3kpKVxuYGBgIn0= -->
+<pre class="r"><code># Removing the salary and salary_currency columns
+data &lt;- subset(data, select = -c(salary, salary_currency))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="countries" class="section level5">
+<h5><strong>3.4.4 Countries:</strong></h5>
+<div id="company-location" class="section level6">
+<h6><strong>3.4.4.1 Company Location:</strong></h6>
+<p>The column <code>company_location</code> reflects the countries where
+the companies are established. Those countries are written as
+abbreviations. While some country abbreviations are widely known, there
+are others that are less known.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFibGUoZGF0YSRjb21wYW55X2xvY2F0aW9uKVxuYGBgIn0= -->
+<pre class="r"><code>table(data$company_location)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG4gIEFFICAgQUwgICBBTSAgIEFSICAgQVMgICBBVCAgIEFVICAgQkEgICBCRSAgIEJPICAgQlIgICBCUyAgIENBICAgQ0YgICBDSCAgIENMIFxuICAgMyAgICAxICAgIDEgICAgMyAgICAzICAgIDYgICAxNCAgICAxICAgIDQgICAgMSAgIDE1ICAgIDEgICA4NyAgICAyICAgIDUgICAgMSBcbiAgQ04gICBDTyAgIENSICAgQ1ogICBERSAgIERLICAgRFogICBFRSAgIEVHICAgRVMgICBGSSAgIEZSICAgR0IgICBHSCAgIEdSICAgSEsgXG4gICAxICAgIDQgICAgMSAgICAzICAgNTYgICAgNCAgICAxICAgIDIgICAgMSAgIDc3ICAgIDMgICAzNCAgMTcyICAgIDIgICAxNCAgICAxIFxuICBITiAgIEhSICAgSFUgICBJRCAgIElFICAgSUwgICBJTiAgIElRICAgSVIgICBJVCAgIEpQICAgS0UgICBMVCAgIExVICAgTFYgICBNQSBcbiAgIDEgICAgMyAgICAyICAgIDIgICAgNyAgICAxICAgNTggICAgMSAgICAxICAgIDQgICAgNiAgICAyICAgIDIgICAgMyAgICA0ICAgIDEgXG4gIE1EICAgTUsgICBNVCAgIE1YICAgTVkgICBORyAgIE5MICAgTlogICBQSCAgIFBLICAgUEwgICBQUiAgIFBUICAgUk8gICBSVSAgIFNFIFxuICAgMSAgICAxICAgIDEgICAxMCAgICAxICAgIDUgICAxMyAgICAxICAgIDEgICAgNCAgICA1ICAgIDQgICAxNCAgICAyICAgIDMgICAgMiBcbiAgU0cgICBTSSAgIFNLICAgVEggICBUUiAgIFVBICAgVVMgICBWTiBcbiAgIDYgICAgNCAgICAxICAgIDMgICAgNSAgICA0IDMwNDAgICAgMSBcbiJ9 -->
+<pre><code>
+  AE   AL   AM   AR   AS   AT   AU   BA   BE   BO   BR   BS   CA   CF   CH   CL 
+   3    1    1    3    3    6   14    1    4    1   15    1   87    2    5    1 
+  CN   CO   CR   CZ   DE   DK   DZ   EE   EG   ES   FI   FR   GB   GH   GR   HK 
+   1    4    1    3   56    4    1    2    1   77    3   34  172    2   14    1 
+  HN   HR   HU   ID   IE   IL   IN   IQ   IR   IT   JP   KE   LT   LU   LV   MA 
+   1    3    2    2    7    1   58    1    1    4    6    2    2    3    4    1 
+  MD   MK   MT   MX   MY   NG   NL   NZ   PH   PK   PL   PR   PT   RO   RU   SE 
+   1    1    1   10    1    5   13    1    1    4    5    4   14    2    3    2 
+  SG   SI   SK   TH   TR   UA   US   VN 
+   6    4    1    3    5    4 3040    1 </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>To ensure clarity, I decided to replace the abbreviations with the
+full country names.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBEZWZpbmluZyBhIG1hcHBpbmcgb2YgY291bnRyeSBjb2RlcyB0byBjb3VudHJ5IG5hbWVzIGZvciBjb21wYW55IGxvY2F0aW9uc1xuY2xfY291bnRyeV9tYXBwaW5nIDwtIGMoXG4gIEFFID0gXCJVbml0ZWQgQXJhYiBFbWlyYXRlc1wiLFxuICBBTCA9IFwiQWxiYW5pYVwiLFxuICBBTSA9IFwiQXJtZW5pYVwiLFxuICBBUiA9IFwiQXJnZW50aW5hXCIsXG4gIEFTID0gXCJBbWVyaWNhbiBTYW1vYVwiLFxuICBBVCA9IFwiQXVzdHJpYVwiLFxuICBBVSA9IFwiQXVzdHJhbGlhXCIsXG4gIEJBID0gXCJCb3NuaWEgYW5kIEhlcnplZ292aW5hXCIsXG4gIEJFID0gXCJCZWxnaXVtXCIsXG4gIEJPID0gXCJCb2xpdmlhXCIsXG4gIEJSID0gXCJCcmF6aWxcIixcbiAgQlMgPSBcIkJhaGFtYXNcIixcbiAgQ0EgPSBcIkNhbmFkYVwiLFxuICBDRiA9IFwiQ2VudHJhbCBBZnJpY2FuIFJlcHVibGljXCIsXG4gIENIID0gXCJTd2l0emVybGFuZFwiLFxuICBDTCA9IFwiQ2hpbGVcIixcbiAgQ04gPSBcIkNoaW5hXCIsXG4gIENPID0gXCJDb2xvbWJpYVwiLFxuICBDUiA9IFwiQ29zdGEgUmljYVwiLFxuICBDWiA9IFwiQ3plY2ggUmVwdWJsaWNcIixcbiAgREUgPSBcIkdlcm1hbnlcIixcbiAgREsgPSBcIkRlbm1hcmtcIixcbiAgRFogPSBcIkFsZ2VyaWFcIixcbiAgRUUgPSBcIkVzdG9uaWFcIixcbiAgRUcgPSBcIkVneXB0XCIsXG4gIEVTID0gXCJTcGFpblwiLFxuICBGSSA9IFwiRmlubGFuZFwiLFxuICBGUiA9IFwiRnJhbmNlXCIsXG4gIEdCID0gXCJVbml0ZWQgS2luZ2RvbVwiLFxuICBHSCA9IFwiR2hhbmFcIixcbiAgR1IgPSBcIkdyZWVjZVwiLFxuICBISyA9IFwiSG9uZyBLb25nXCIsXG4gIEhOID0gXCJIb25kdXJhc1wiLFxuICBIUiA9IFwiQ3JvYXRpYVwiLFxuICBIVSA9IFwiSHVuZ2FyeVwiLFxuICBJRCA9IFwiSW5kb25lc2lhXCIsXG4gIElFID0gXCJJcmVsYW5kXCIsXG4gIElOID0gXCJJbmRpYVwiLFxuICBJUSA9IFwiSXJhcVwiLFxuICBJUiA9IFwiSXJhblwiLFxuICBJVCA9IFwiSXRhbHlcIixcbiAgSlAgPSBcIkphcGFuXCIsXG4gIEtFID0gXCJLZW55YVwiLFxuICBMVCA9IFwiTGl0aHVhbmlhXCIsXG4gIExVID0gXCJMdXhlbWJvdXJnXCIsXG4gIExWID0gXCJMYXR2aWFcIixcbiAgTUEgPSBcIk1vcm9jY29cIixcbiAgTUQgPSBcIk1vbGRvdmFcIixcbiAgTUsgPSBcIk5vcnRoIE1hY2Vkb25pYVwiLFxuICBNVCA9IFwiTWFsdGFcIixcbiAgTVggPSBcIk1leGljb1wiLFxuICBNWSA9IFwiTWFsYXlzaWFcIixcbiAgTkcgPSBcIk5pZ2VyaWFcIixcbiAgTkwgPSBcIk5ldGhlcmxhbmRzXCIsXG4gIE5aID0gXCJOZXcgWmVhbGFuZFwiLFxuICBQSCA9IFwiUGhpbGlwcGluZXNcIixcbiAgUEsgPSBcIlBha2lzdGFuXCIsXG4gIFBMID0gXCJQb2xhbmRcIixcbiAgUFIgPSBcIlB1ZXJ0byBSaWNvXCIsXG4gIFBUID0gXCJQb3J0dWdhbFwiLFxuICBSTyA9IFwiUm9tYW5pYVwiLFxuICBSVSA9IFwiUnVzc2lhXCIsXG4gIFNFID0gXCJTd2VkZW5cIixcbiAgU0cgPSBcIlNpbmdhcG9yZVwiLFxuICBTSSA9IFwiU2xvdmVuaWFcIixcbiAgU0sgPSBcIlNsb3Zha2lhXCIsXG4gIFRIID0gXCJUaGFpbGFuZFwiLFxuICBUUiA9IFwiVHVya2V5XCIsXG4gIFVBID0gXCJVa3JhaW5lXCIsXG4gIFVTID0gXCJVbml0ZWQgU3RhdGVzXCIsXG4gIFZOID0gXCJWaWV0bmFtXCJcbilcblxuIyBSZXBsYWNpbmcgdmFsdWVzIGluIHRoZSAnY29tcGFueV9sb2NhdGlvbicgY29sdW1uIHVzaW5nIHRoZSBtYXBwaW5nIGNyZWF0ZWQgYWJvdmVcbmRhdGEkY29tcGFueV9sb2NhdGlvbiA8LSBjbF9jb3VudHJ5X21hcHBpbmdbZGF0YSRjb21wYW55X2xvY2F0aW9uXVxuXG5gYGAifQ== -->
+<pre class="r"><code># Defining a mapping of country codes to country names for company locations
+cl_country_mapping &lt;- c(
+  AE = &quot;United Arab Emirates&quot;,
+  AL = &quot;Albania&quot;,
+  AM = &quot;Armenia&quot;,
+  AR = &quot;Argentina&quot;,
+  AS = &quot;American Samoa&quot;,
+  AT = &quot;Austria&quot;,
+  AU = &quot;Australia&quot;,
+  BA = &quot;Bosnia and Herzegovina&quot;,
+  BE = &quot;Belgium&quot;,
+  BO = &quot;Bolivia&quot;,
+  BR = &quot;Brazil&quot;,
+  BS = &quot;Bahamas&quot;,
+  CA = &quot;Canada&quot;,
+  CF = &quot;Central African Republic&quot;,
+  CH = &quot;Switzerland&quot;,
+  CL = &quot;Chile&quot;,
+  CN = &quot;China&quot;,
+  CO = &quot;Colombia&quot;,
+  CR = &quot;Costa Rica&quot;,
+  CZ = &quot;Czech Republic&quot;,
+  DE = &quot;Germany&quot;,
+  DK = &quot;Denmark&quot;,
+  DZ = &quot;Algeria&quot;,
+  EE = &quot;Estonia&quot;,
+  EG = &quot;Egypt&quot;,
+  ES = &quot;Spain&quot;,
+  FI = &quot;Finland&quot;,
+  FR = &quot;France&quot;,
+  GB = &quot;United Kingdom&quot;,
+  GH = &quot;Ghana&quot;,
+  GR = &quot;Greece&quot;,
+  HK = &quot;Hong Kong&quot;,
+  HN = &quot;Honduras&quot;,
+  HR = &quot;Croatia&quot;,
+  HU = &quot;Hungary&quot;,
+  ID = &quot;Indonesia&quot;,
+  IE = &quot;Ireland&quot;,
+  IN = &quot;India&quot;,
+  IQ = &quot;Iraq&quot;,
+  IR = &quot;Iran&quot;,
+  IT = &quot;Italy&quot;,
+  JP = &quot;Japan&quot;,
+  KE = &quot;Kenya&quot;,
+  LT = &quot;Lithuania&quot;,
+  LU = &quot;Luxembourg&quot;,
+  LV = &quot;Latvia&quot;,
+  MA = &quot;Morocco&quot;,
+  MD = &quot;Moldova&quot;,
+  MK = &quot;North Macedonia&quot;,
+  MT = &quot;Malta&quot;,
+  MX = &quot;Mexico&quot;,
+  MY = &quot;Malaysia&quot;,
+  NG = &quot;Nigeria&quot;,
+  NL = &quot;Netherlands&quot;,
+  NZ = &quot;New Zealand&quot;,
+  PH = &quot;Philippines&quot;,
+  PK = &quot;Pakistan&quot;,
+  PL = &quot;Poland&quot;,
+  PR = &quot;Puerto Rico&quot;,
+  PT = &quot;Portugal&quot;,
+  RO = &quot;Romania&quot;,
+  RU = &quot;Russia&quot;,
+  SE = &quot;Sweden&quot;,
+  SG = &quot;Singapore&quot;,
+  SI = &quot;Slovenia&quot;,
+  SK = &quot;Slovakia&quot;,
+  TH = &quot;Thailand&quot;,
+  TR = &quot;Turkey&quot;,
+  UA = &quot;Ukraine&quot;,
+  US = &quot;United States&quot;,
+  VN = &quot;Vietnam&quot;
+)
+
+# Replacing values in the &#39;company_location&#39; column using the mapping created above
+data$company_location &lt;- cl_country_mapping[data$company_location]
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="employee-residence" class="section level6">
+<h6><strong>3.4.4.2 Employee Residence:</strong></h6>
+<p>Now, we’ll do the same process for <code>employee_residence</code>
+column.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI0NoZWNraW5nIHdoaWNoIGNvdW50cmllcyBhcmUgaW5jbHVkZWRcbnRhYmxlKGRhdGEkZW1wbG95ZWVfcmVzaWRlbmNlKVxuYGBgIn0= -->
+<pre class="r"><code>#Checking which countries are included
+table(data$employee_residence)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG4gIEFFICAgQU0gICBBUiAgIEFTICAgQVQgICBBVSAgIEJBICAgQkUgICBCRyAgIEJPICAgQlIgICBDQSAgIENGICAgQ0ggICBDTCAgIENOIFxuICAgMyAgICAxICAgIDYgICAgMiAgICA2ICAgMTEgICAgMSAgICA1ICAgIDEgICAgMyAgIDE4ICAgODUgICAgMiAgICA0ICAgIDIgICAgMSBcbiAgQ08gICBDUiAgIENZICAgQ1ogICBERSAgIERLICAgRE8gICBEWiAgIEVFICAgRUcgICBFUyAgIEZJICAgRlIgICBHQiAgIEdIICAgR1IgXG4gICA0ICAgIDEgICAgMSAgICAyICAgNDggICAgMyAgICAxICAgIDEgICAgMSAgICAxICAgODAgICAgMiAgIDM4ICAxNjcgICAgMiAgIDE2IFxuICBISyAgIEhOICAgSFIgICBIVSAgIElEICAgSUUgICBJTiAgIElRICAgSVIgICBJVCAgIEpFICAgSlAgICBLRSAgIEtXICAgTFQgICBMVSBcbiAgIDIgICAgMSAgICAzICAgIDMgICAgMSAgICA3ICAgNzEgICAgMSAgICAxICAgIDggICAgMSAgICA3ICAgIDIgICAgMSAgICAyICAgIDEgXG4gIExWICAgTUEgICBNRCAgIE1LICAgTVQgICBNWCAgIE1ZICAgTkcgICBOTCAgIE5aICAgUEggICBQSyAgIFBMICAgUFIgICBQVCAgIFJPIFxuICAgNCAgICAxICAgIDEgICAgMSAgICAxICAgMTAgICAgMSAgICA3ICAgMTUgICAgMSAgICAyICAgIDggICAgNiAgICA1ICAgMTggICAgMyBcbiAgUlMgICBSVSAgIFNFICAgU0cgICBTSSAgIFNLICAgVEggICBUTiAgIFRSICAgVUEgICBVUyAgIFVaICAgVk4gXG4gICAxICAgIDQgICAgMiAgICA0ICAgIDQgICAgMSAgICAzICAgIDEgICAgNSAgICA0IDMwMDQgICAgMiAgICAzIFxuIn0= -->
+<pre><code>
+  AE   AM   AR   AS   AT   AU   BA   BE   BG   BO   BR   CA   CF   CH   CL   CN 
+   3    1    6    2    6   11    1    5    1    3   18   85    2    4    2    1 
+  CO   CR   CY   CZ   DE   DK   DO   DZ   EE   EG   ES   FI   FR   GB   GH   GR 
+   4    1    1    2   48    3    1    1    1    1   80    2   38  167    2   16 
+  HK   HN   HR   HU   ID   IE   IN   IQ   IR   IT   JE   JP   KE   KW   LT   LU 
+   2    1    3    3    1    7   71    1    1    8    1    7    2    1    2    1 
+  LV   MA   MD   MK   MT   MX   MY   NG   NL   NZ   PH   PK   PL   PR   PT   RO 
+   4    1    1    1    1   10    1    7   15    1    2    8    6    5   18    3 
+  RS   RU   SE   SG   SI   SK   TH   TN   TR   UA   US   UZ   VN 
+   1    4    2    4    4    1    3    1    5    4 3004    2    3 </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBEZWZpbmluZyBhIG1hcHBpbmcgb2YgY291bnRyeSBjb2RlcyB0byBjb3VudHJ5IG5hbWVzIGZvciBlbXBsb3llZSByZXNpZGVuY2VcblxuZXJfY291bnRyeV9tYXBwaW5nIDwtIGMoXG4gIEFFID0gXCJVbml0ZWQgQXJhYiBFbWlyYXRlc1wiLFxuICBBTSA9IFwiQXJtZW5pYVwiLFxuICBBUiA9IFwiQXJnZW50aW5hXCIsXG4gIEFTID0gXCJBbWVyaWNhbiBTYW1vYVwiLFxuICBBVCA9IFwiQXVzdHJpYVwiLFxuICBBVSA9IFwiQXVzdHJhbGlhXCIsXG4gIEJBID0gXCJCb3NuaWEgYW5kIEhlcnplZ292aW5hXCIsXG4gIEJFID0gXCJCZWxnaXVtXCIsXG4gIEJHID0gXCJCdWxnYXJpYVwiLFxuICBCTyA9IFwiQm9saXZpYVwiLFxuICBCUiA9IFwiQnJhemlsXCIsXG4gIENBID0gXCJDYW5hZGFcIixcbiAgQ0YgPSBcIkNlbnRyYWwgQWZyaWNhbiBSZXB1YmxpY1wiLFxuICBDSCA9IFwiU3dpdHplcmxhbmRcIixcbiAgQ0wgPSBcIkNoaWxlXCIsXG4gIENOID0gXCJDaGluYVwiLFxuICBDTyA9IFwiQ29sb21iaWFcIixcbiAgQ1IgPSBcIkNvc3RhIFJpY2FcIixcbiAgQ1kgPSBcIkN5cHJ1c1wiLFxuICBDWiA9IFwiQ3plY2ggUmVwdWJsaWNcIixcbiAgREUgPSBcIkdlcm1hbnlcIixcbiAgREsgPSBcIkRlbm1hcmtcIixcbiAgRE8gPSBcIkRvbWluaWNhbiBSZXB1YmxpY1wiLFxuICBEWiA9IFwiQWxnZXJpYVwiLFxuICBFRSA9IFwiRXN0b25pYVwiLFxuICBFRyA9IFwiRWd5cHRcIixcbiAgRVMgPSBcIlNwYWluXCIsXG4gIEZJID0gXCJGaW5sYW5kXCIsXG4gIEZSID0gXCJGcmFuY2VcIixcbiAgR0IgPSBcIlVuaXRlZCBLaW5nZG9tXCIsXG4gIEdIID0gXCJHaGFuYVwiLFxuICBHUiA9IFwiR3JlZWNlXCIsXG4gIEhLID0gXCJIb25nIEtvbmdcIixcbiAgSE4gPSBcIkhvbmR1cmFzXCIsXG4gIEhSID0gXCJDcm9hdGlhXCIsXG4gIEhVID0gXCJIdW5nYXJ5XCIsXG4gIElEID0gXCJJbmRvbmVzaWFcIixcbiAgSUUgPSBcIklyZWxhbmRcIixcbiAgSU4gPSBcIkluZGlhXCIsXG4gIElRID0gXCJJcmFxXCIsXG4gIElSID0gXCJJcmFuXCIsXG4gIElUID0gXCJJdGFseVwiLFxuICBKRSA9IFwiSmVyc2V5XCIsXG4gIEpQID0gXCJKYXBhblwiLFxuICBLRSA9IFwiS2VueWFcIixcbiAgS1cgPSBcIkt1d2FpdFwiLFxuICBMVCA9IFwiTGl0aHVhbmlhXCIsXG4gIExVID0gXCJMdXhlbWJvdXJnXCIsXG4gIExWID0gXCJMYXR2aWFcIixcbiAgTUEgPSBcIk1vcm9jY29cIixcbiAgTUQgPSBcIk1vbGRvdmFcIixcbiAgTUsgPSBcIk5vcnRoIE1hY2Vkb25pYVwiLFxuICBNVCA9IFwiTWFsdGFcIixcbiAgTVggPSBcIk1leGljb1wiLFxuICBNWSA9IFwiTWFsYXlzaWFcIixcbiAgTkcgPSBcIk5pZ2VyaWFcIixcbiAgTkwgPSBcIk5ldGhlcmxhbmRzXCIsXG4gIE5aID0gXCJOZXcgWmVhbGFuZFwiLFxuICBQSCA9IFwiUGhpbGlwcGluZXNcIixcbiAgUEsgPSBcIlBha2lzdGFuXCIsXG4gIFBMID0gXCJQb2xhbmRcIixcbiAgUFIgPSBcIlB1ZXJ0byBSaWNvXCIsXG4gIFBUID0gXCJQb3J0dWdhbFwiLFxuICBSTyA9IFwiUm9tYW5pYVwiLFxuICBSUyA9IFwiU2VyYmlhXCIsXG4gIFJVID0gXCJSdXNzaWFcIixcbiAgU0UgPSBcIlN3ZWRlblwiLFxuICBTRyA9IFwiU2luZ2Fwb3JlXCIsXG4gIFNJID0gXCJTbG92ZW5pYVwiLFxuICBTSyA9IFwiU2xvdmFraWFcIixcbiAgVEggPSBcIlRoYWlsYW5kXCIsXG4gIFROID0gXCJUdW5pc2lhXCIsXG4gIFRSID0gXCJUdXJrZXlcIixcbiAgVUEgPSBcIlVrcmFpbmVcIixcbiAgVVMgPSBcIlVuaXRlZCBTdGF0ZXNcIixcbiAgVVogPSBcIlV6YmVraXN0YW5cIixcbiAgVk4gPSBcIlZpZXRuYW1cIlxuKVxuXG4jIFJlcGxhY2luZyB2YWx1ZXMgaW4gdGhlICdlbXBsb3llZV9yZXNpZGVuY2UnIGNvbHVtbiB1c2luZyB0aGUgbWFwcGluZyBjcmVhdGVkIGFib3ZlXG5kYXRhJGVtcGxveWVlX3Jlc2lkZW5jZSA8LSBlcl9jb3VudHJ5X21hcHBpbmdbZGF0YSRlbXBsb3llZV9yZXNpZGVuY2VdXG5cbmBgYCJ9 -->
+<pre class="r"><code># Defining a mapping of country codes to country names for employee residence
+
+er_country_mapping &lt;- c(
+  AE = &quot;United Arab Emirates&quot;,
+  AM = &quot;Armenia&quot;,
+  AR = &quot;Argentina&quot;,
+  AS = &quot;American Samoa&quot;,
+  AT = &quot;Austria&quot;,
+  AU = &quot;Australia&quot;,
+  BA = &quot;Bosnia and Herzegovina&quot;,
+  BE = &quot;Belgium&quot;,
+  BG = &quot;Bulgaria&quot;,
+  BO = &quot;Bolivia&quot;,
+  BR = &quot;Brazil&quot;,
+  CA = &quot;Canada&quot;,
+  CF = &quot;Central African Republic&quot;,
+  CH = &quot;Switzerland&quot;,
+  CL = &quot;Chile&quot;,
+  CN = &quot;China&quot;,
+  CO = &quot;Colombia&quot;,
+  CR = &quot;Costa Rica&quot;,
+  CY = &quot;Cyprus&quot;,
+  CZ = &quot;Czech Republic&quot;,
+  DE = &quot;Germany&quot;,
+  DK = &quot;Denmark&quot;,
+  DO = &quot;Dominican Republic&quot;,
+  DZ = &quot;Algeria&quot;,
+  EE = &quot;Estonia&quot;,
+  EG = &quot;Egypt&quot;,
+  ES = &quot;Spain&quot;,
+  FI = &quot;Finland&quot;,
+  FR = &quot;France&quot;,
+  GB = &quot;United Kingdom&quot;,
+  GH = &quot;Ghana&quot;,
+  GR = &quot;Greece&quot;,
+  HK = &quot;Hong Kong&quot;,
+  HN = &quot;Honduras&quot;,
+  HR = &quot;Croatia&quot;,
+  HU = &quot;Hungary&quot;,
+  ID = &quot;Indonesia&quot;,
+  IE = &quot;Ireland&quot;,
+  IN = &quot;India&quot;,
+  IQ = &quot;Iraq&quot;,
+  IR = &quot;Iran&quot;,
+  IT = &quot;Italy&quot;,
+  JE = &quot;Jersey&quot;,
+  JP = &quot;Japan&quot;,
+  KE = &quot;Kenya&quot;,
+  KW = &quot;Kuwait&quot;,
+  LT = &quot;Lithuania&quot;,
+  LU = &quot;Luxembourg&quot;,
+  LV = &quot;Latvia&quot;,
+  MA = &quot;Morocco&quot;,
+  MD = &quot;Moldova&quot;,
+  MK = &quot;North Macedonia&quot;,
+  MT = &quot;Malta&quot;,
+  MX = &quot;Mexico&quot;,
+  MY = &quot;Malaysia&quot;,
+  NG = &quot;Nigeria&quot;,
+  NL = &quot;Netherlands&quot;,
+  NZ = &quot;New Zealand&quot;,
+  PH = &quot;Philippines&quot;,
+  PK = &quot;Pakistan&quot;,
+  PL = &quot;Poland&quot;,
+  PR = &quot;Puerto Rico&quot;,
+  PT = &quot;Portugal&quot;,
+  RO = &quot;Romania&quot;,
+  RS = &quot;Serbia&quot;,
+  RU = &quot;Russia&quot;,
+  SE = &quot;Sweden&quot;,
+  SG = &quot;Singapore&quot;,
+  SI = &quot;Slovenia&quot;,
+  SK = &quot;Slovakia&quot;,
+  TH = &quot;Thailand&quot;,
+  TN = &quot;Tunisia&quot;,
+  TR = &quot;Turkey&quot;,
+  UA = &quot;Ukraine&quot;,
+  US = &quot;United States&quot;,
+  UZ = &quot;Uzbekistan&quot;,
+  VN = &quot;Vietnam&quot;
+)
+
+# Replacing values in the &#39;employee_residence&#39; column using the mapping created above
+data$employee_residence &lt;- er_country_mapping[data$employee_residence]
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+</div>
 </div>
 </div>
 <div id="data-analysis" class="section level3">
@@ -1898,7 +2270,7 @@ head(data)</code></pre>
 <!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIkEgWm9vbSBJbnRvIERhdGEtUmVsYXRlZCBKb2JzIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQotLS0NCg0KDQoNCg0KKipOYW1lKio6IFNhbWFoZXIgQnJhaGVtIA0KDQoqKkNvdXJzZSoqOiBDb2RpbmcgZm9yIERTICYgRE0gLSBSIE1vZHVsZSANCg0KKipQcm9mZXNzb3IqKjogR2lhbmNhcmxvIE1hbnppDQoNCg0KIyMjICoqMS4gSW50cm9kdWN0aW9uKioNCg0KVGhpcyBzdHVkeSBhaW1zIHRvIGFuYWx5emUgc2FsYXJ5IGRpZmZlcmVuY2VzIGFtb25nIERhdGEgU2NpZW50aXN0cyBhbmQgb3RoZXIgRGF0YS1yZWxhdGVkIHJvbGVzIGFjcm9zcyBkaWZmZXJlbnQgY291bnRyaWVzLiBVdGlsaXppbmcgYSBkYXRhc2V0IGNvbnRhaW5pbmcgZGl2ZXJzZSBlbXBsb3ltZW50IHR5cGVzLCBleHBlcmllbmNlIGxldmVscywgYW5kIGNvbXBhbnkgc2l6ZXMsIHRoZSBzdHVkeSBpbnRlbmRzIHRvIGNvbmR1Y3Qgc3RhdGlzdGljYWwgYW5hbHlzZXMgYW5kIHZpc3VhbGl6YXRpb25zIHVzaW5nIFIuIFRoZSBvYmplY3RpdmUgaXMgdG8gaWRlbnRpZnkgcG90ZW50aWFsIHNhbGFyeSBkaXNwYXJpdGllcyBhbmQgdHJlbmRzIGFjcm9zcyB2YXJpb3VzIGdsb2JhbCBjb250ZXh0cy4gVGhlIHN0dWR5IGFpbXMgdG8gc2hlZCBsaWdodCBvbiBudWFuY2VkIHNhbGFyeSBwYXR0ZXJucyB3aXRoaW4gdGhlIGRhdGEgc2NpZW5jZSBkb21haW4sIG9mZmVyaW5nIGluc2lnaHRzIGludG8gdGhlIHZhcmlhdGlvbnMgb2YgY29tcGVuc2F0aW9uIGFtb25nIGRhdGEtcmVsYXRlZCByb2xlcyBvbiBhIGdsb2JhbCBzY2FsZS4NCg0KIyMjICoqMi4gRGF0YSBVc2VkKioNCg0KVGhlICpTYWxhcnkgb2YgRGF0YSBTY2llbnRpc3RzKiBkYXRhc2V0IHdpbGwgYmUgdXNlZCBmb3IgdGhpcyBhbmFseXNpcy4gSXQgaXMgbWFkZSBhdmFpbGFibGUgb24gW0thZ2dsZV0oaHR0cHM6Ly93d3cua2FnZ2xlLmNvbS9kYXRhc2V0cy9waXl1c2hib3JoYWRlL3NhbGFyeS1vZi1kYXRhLXNjaWVudGlzdHMpIGJ5IHRoZSB1c2VyLCBQaXl1c2ggQm9yaGFkZS4NCg0KKipBLiBGZWF0dXJlcyBvZiB0aGUgZGF0YXNldCoqOg0KDQotIGB3b3JrX3llYXJgOiBUaGUgeWVhciB0aGUgc2FsYXJ5IHdhcyBwYWlkLg0KDQotIGBleHBlcmllbmNlX2xldmVsYDogVGhlIGxldmVsIG9mIHdvcmsgZXhwZXJpZW5jZSBkdXJpbmcgdGhlIHllYXINCg0KLSBgZW1wbG95bWVudF90eXBlYDogdGhlIHR5cGUgb2YgZW1wbG95bWVudCBmb3IgdGhlIHJvbGUNCg0KLSBgam9iX3RpdGxlYDogVGhlIGpvYiBpbiB3aGljaCB5b3Ugd29ya2VkIGR1cmluZyB0aGUgeWVhci4NCg0KLSBgc2FsYXJ5YDogVGhlIHRvdGFsIGdyb3NzIGFtb3VudCBvZiBzYWxhcnkgcGFpZC4NCg0KLSBgc2FsYXJ5X2N1cnJlbmN5YDogVGhlIGN1cnJlbmN5IG9mIHRoZSBzYWxhcnkgcGFpZCBhcyBhbiBJU08gNDIxNyBjdXJyZW5jeSBjb2RlLg0KDQotIGBzYWxhcmlvaW51c2RgOiBUaGUgc2FsYXJ5IGluIFVTRA0KDQotIGBlbXBsb3llZV9yZXNpZGVuY2VgOiB0aGUgY291bnRyeSBvZiBwcmltYXJ5IHJlc2lkZW5jZSBvZiB0aGUgZW1wbG95ZWUgZHVyaW5nIHRoZSBlbXBsb3ltZW50IHllYXIgYXMgYW4gSVNPIDMxNjYgY291bnRyeSBjb2RlLg0KDQotIGByZW1vdGVfcmF0aW9gOiBUaGUgdG90YWwgYW1vdW50IG9mIHdvcmsgZG9uZSByZW1vdGVseQ0KDQotIGBjb21wYW55X2xvY2F0aW9uYDogVGhlIGNvdW50cnkgb2YgaGVhZHF1YXJ0ZXJzIG9mIHRoZSBlbXBsb3llciBvciBjb250cmFjdGluZyBicmFuY2gNCg0KLSBgY29tcGFueV9zaXplYDogVGhlIGF2ZXJhZ2UgbnVtYmVyIG9mIHBlb3BsZSB3aG8gd29ya2VkIGZvciB0aGUgY29tcGFueSBkdXJpbmcgdGhlIHllYXINCg0KDQoqKkIuIExpbWl0cyBvZiB0aGUgZGF0YXNldCoqOg0KDQoxLiBObyBTaGFyZWQgU291cmNlczoNCg0KVGhlIGluZm9ybWF0aW9uIGFib3V0IGhvdyB0aGUgZGF0YSB3YXMgY29sbGVjdGVkIGFuZCB3aG8gY29sbGVjdGVkIGl0IGlzbid0IGNsZWFyLiBUaGlzIGxhY2sgb2YgY2xhcml0eSByYWlzZXMgZG91YnRzIGFib3V0IGhvdyBkZXBlbmRhYmxlIHRoZSBkYXRhIGlzLg0KDQoNCjIuIEdlb2dyYXBoaWNhbCBCaWFzOg0KDQpUaGUgZGF0YXNldCBwcmltYXJpbHkgY29tcHJpc2VzIGRhdGEgZnJvbSB0aGUgVW5pdGVkIFN0YXRlcywgcmVzdWx0aW5nIGluIGFuIGltYmFsYW5jZSB3aGVyZSBvdGhlciBjb3VudHJpZXMgYXJlIHVuZGVycmVwcmVzZW50ZWQuIFRoaXMgc2tldyBtaWdodCBsaW1pdCB0aGUgZGVwdGggYW5kIGFjY3VyYWN5IG9mIGFuYWx5c2VzLCBwb3RlbnRpYWxseSBsZWFkaW5nIHRvIGFuIG92ZXJlbXBoYXNpcyBvbiBBbWVyaWNhbi1jZW50cmljIGluc2lnaHRzIGFuZCBhIGxhY2sgb2YgY29tcHJlaGVuc2l2ZSB1bmRlcnN0YW5kaW5nIHJlZ2FyZGluZyBvdGhlciByZWdpb25zIG9yIGdsb2JhbCBwZXJzcGVjdGl2ZXMuDQoNCg0KIyMjICoqMy4gRGF0YSBQcm9jZXNzaW5nKioNCg0KIyMjIyAqKjMuIDEgSW5zdGFsbGluZyBwYWNrYWdlcyBhbmQgb3BlbmluZyBsaWJyYXJpZXM6KioNCg0KLSB0aWR5dmVyc2UNCg0KYGBge3J9DQpsaWJyYXJ5KHRpZHl2ZXJzZSkNCg0KYGBgDQoNCiMjIyMgKiozLjIgSW1wb3J0aW5nIHRoZSBkYXRhc2V0OioqDQoNCmBgYHtyfQ0KIyBJbXBvcnRpbmcgdGhlIGRhdGFzZXQgZnJvbSBhIGxvY2FsIHBhdGggaW4gbXkgY29tcHV0ZXINCmRhdGEgPC0gcmVhZC5jc3YoIkM6L1VzZXJzL1NhbWFoZXIvRG9jdW1lbnRzL0RTRV9SX1Byb2plY3QvZGF0YS5jc3YiKQ0KDQojIENvbnZlcnRpbmcgaXQgaW50byBhIHRpYmJsZQ0KZGF0YSA8LSBhcy50aWJibGUoZGF0YSkNCg0KYGBgDQoNCg0KIyMjIyAqKjMuMyBQcmV2aWV3aW5nIHRoZSBkYXRhc2V0OioqDQoNCmBgYHtyfQ0KIyBVbmRlcnN0YW5kaW5nIHRoZSBzdHJ1Y3R1cmUgb2YgdGhlIGRhdGFzZXQNCnN0cihkYXRhKQ0KYGBgDQoNCmBgYHtyfQ0KIyBEaXNwbGF5aW5nIGEgc2FtcGxlIG9mIHRoZSBkYXRhDQpoZWFkKGRhdGEpDQpgYGANCg0KDQojIyMjICoqMy40IENsZWFuaW5nIGFuZCBmb3JtYXR0aW5nIHRoZSBkYXRhc2V0OioqDQoNCiMjIyAqKjQuIERhdGEgQW5hbHlzaXMqKg0KDQojIyMgKio1LiBDb25jbHVzaW9uKioNCg0K</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIkEgWm9vbSBJbnRvIERhdGEtUmVsYXRlZCBKb2JzIg0Kb3V0cHV0OiBodG1sX25vdGVib29rDQotLS0NCg0KDQoNCg0KKipOYW1lKio6IFNhbWFoZXIgQnJhaGVtIA0KDQoqKkNvdXJzZSoqOiBDb2RpbmcgZm9yIERTICYgRE0gLSBSIE1vZHVsZSANCg0KKipQcm9mZXNzb3IqKjogR2lhbmNhcmxvIE1hbnppDQoNCg0KIyMjICoqMS4gSW50cm9kdWN0aW9uKioNCg0KVGhpcyBzdHVkeSBhaW1zIHRvIGFuYWx5emUgc2FsYXJ5IGRpZmZlcmVuY2VzIGFtb25nIERhdGEgU2NpZW50aXN0cyBhbmQgb3RoZXIgRGF0YS1yZWxhdGVkIHJvbGVzIGFjcm9zcyBkaWZmZXJlbnQgY291bnRyaWVzLiBVdGlsaXppbmcgYSBkYXRhc2V0IGNvbnRhaW5pbmcgZGl2ZXJzZSBlbXBsb3ltZW50IHR5cGVzLCBleHBlcmllbmNlIGxldmVscywgYW5kIGNvbXBhbnkgc2l6ZXMsIHRoZSBzdHVkeSBpbnRlbmRzIHRvIGNvbmR1Y3Qgc3RhdGlzdGljYWwgYW5hbHlzZXMgYW5kIHZpc3VhbGl6YXRpb25zIHVzaW5nIFIuIFRoZSBvYmplY3RpdmUgaXMgdG8gaWRlbnRpZnkgcG90ZW50aWFsIHNhbGFyeSBkaXNwYXJpdGllcyBhbmQgdHJlbmRzIGFjcm9zcyB2YXJpb3VzIGdsb2JhbCBjb250ZXh0cy4gVGhlIHN0dWR5IGFpbXMgdG8gc2hlZCBsaWdodCBvbiBudWFuY2VkIHNhbGFyeSBwYXR0ZXJucyB3aXRoaW4gdGhlIGRhdGEgc2NpZW5jZSBkb21haW4sIG9mZmVyaW5nIGluc2lnaHRzIGludG8gdGhlIHZhcmlhdGlvbnMgb2YgY29tcGVuc2F0aW9uIGFtb25nIGRhdGEtcmVsYXRlZCByb2xlcyBvbiBhIGdsb2JhbCBzY2FsZS4NCg0KIyMjICoqMi4gRGF0YSBVc2VkKioNCg0KVGhlICpTYWxhcnkgb2YgRGF0YSBTY2llbnRpc3RzKiBkYXRhc2V0IHdpbGwgYmUgdXNlZCBmb3IgdGhpcyBhbmFseXNpcy4gSXQgaXMgbWFkZSBhdmFpbGFibGUgb24gW0thZ2dsZV0oaHR0cHM6Ly93d3cua2FnZ2xlLmNvbS9kYXRhc2V0cy9waXl1c2hib3JoYWRlL3NhbGFyeS1vZi1kYXRhLXNjaWVudGlzdHMpIGJ5IHRoZSB1c2VyLCBQaXl1c2ggQm9yaGFkZS4NCg0KKipBLiBGZWF0dXJlcyBvZiB0aGUgZGF0YXNldCoqOg0KDQotIGB3b3JrX3llYXJgOiBUaGUgeWVhciB0aGUgc2FsYXJ5IHdhcyBwYWlkLg0KDQotIGBleHBlcmllbmNlX2xldmVsYDogVGhlIGxldmVsIG9mIHdvcmsgZXhwZXJpZW5jZSBkdXJpbmcgdGhlIHllYXINCg0KLSBgZW1wbG95bWVudF90eXBlYDogdGhlIHR5cGUgb2YgZW1wbG95bWVudCBmb3IgdGhlIHJvbGUNCg0KLSBgam9iX3RpdGxlYDogVGhlIGpvYiBpbiB3aGljaCB5b3Ugd29ya2VkIGR1cmluZyB0aGUgeWVhci4NCg0KLSBgc2FsYXJ5YDogVGhlIHRvdGFsIGdyb3NzIGFtb3VudCBvZiBzYWxhcnkgcGFpZC4NCg0KLSBgc2FsYXJ5X2N1cnJlbmN5YDogVGhlIGN1cnJlbmN5IG9mIHRoZSBzYWxhcnkgcGFpZCBhcyBhbiBJU08gNDIxNyBjdXJyZW5jeSBjb2RlLg0KDQotIGBzYWxhcnlfaW5fdXNkYDogVGhlIHNhbGFyeSBpbiBVU0QNCg0KLSBgZW1wbG95ZWVfcmVzaWRlbmNlYDogdGhlIGNvdW50cnkgb2YgcHJpbWFyeSByZXNpZGVuY2Ugb2YgdGhlIGVtcGxveWVlIGR1cmluZyB0aGUgZW1wbG95bWVudCB5ZWFyIGFzIGFuIElTTyAzMTY2IGNvdW50cnkgY29kZS4NCg0KLSBgcmVtb3RlX3JhdGlvYDogVGhlIHRvdGFsIGFtb3VudCBvZiB3b3JrIGRvbmUgcmVtb3RlbHkNCg0KLSBgY29tcGFueV9sb2NhdGlvbmA6IFRoZSBjb3VudHJ5IG9mIGhlYWRxdWFydGVycyBvZiB0aGUgZW1wbG95ZXIgb3IgY29udHJhY3RpbmcgYnJhbmNoDQoNCi0gYGNvbXBhbnlfc2l6ZWA6IFRoZSBhdmVyYWdlIG51bWJlciBvZiBwZW9wbGUgd2hvIHdvcmtlZCBmb3IgdGhlIGNvbXBhbnkgZHVyaW5nIHRoZSB5ZWFyDQoNCg0KKipCLiBMaW1pdHMgb2YgdGhlIGRhdGFzZXQqKjoNCg0KMS4gTm8gU2hhcmVkIFNvdXJjZXM6DQoNClRoZSBpbmZvcm1hdGlvbiBhYm91dCBob3cgdGhlIGRhdGEgd2FzIGNvbGxlY3RlZCBhbmQgd2hvIGNvbGxlY3RlZCBpdCBpc24ndCBjbGVhci4gVGhpcyBsYWNrIG9mIGNsYXJpdHkgcmFpc2VzIGRvdWJ0cyBhYm91dCBob3cgZGVwZW5kYWJsZSB0aGUgZGF0YSBpcy4NCg0KDQoyLiBHZW9ncmFwaGljYWwgQmlhczoNCg0KVGhlIGRhdGFzZXQgcHJpbWFyaWx5IGNvbXByaXNlcyBkYXRhIGZyb20gdGhlIFVuaXRlZCBTdGF0ZXMsIHJlc3VsdGluZyBpbiBhbiBpbWJhbGFuY2Ugd2hlcmUgb3RoZXIgY291bnRyaWVzIGFyZSB1bmRlcnJlcHJlc2VudGVkLiBUaGlzIHNrZXcgbWlnaHQgbGltaXQgdGhlIGRlcHRoIGFuZCBhY2N1cmFjeSBvZiBhbmFseXNlcywgcG90ZW50aWFsbHkgbGVhZGluZyB0byBhbiBvdmVyZW1waGFzaXMgb24gQW1lcmljYW4tY2VudHJpYyBpbnNpZ2h0cyBhbmQgYSBsYWNrIG9mIGNvbXByZWhlbnNpdmUgdW5kZXJzdGFuZGluZyByZWdhcmRpbmcgb3RoZXIgcmVnaW9ucyBvciBnbG9iYWwgcGVyc3BlY3RpdmVzLg0KDQoNCiMjIyAqKjMuIERhdGEgUHJvY2Vzc2luZyoqDQoNCiMjIyMgKiozLiAxIEluc3RhbGxpbmcgcGFja2FnZXMgYW5kIG9wZW5pbmcgbGlicmFyaWVzOioqDQoNCi0gdGlkeXZlcnNlDQoNCmBgYHtyfQ0KbGlicmFyeSh0aWR5dmVyc2UpDQoNCmBgYA0KDQojIyMjICoqMy4yIEltcG9ydGluZyB0aGUgZGF0YXNldDoqKg0KDQpgYGB7cn0NCiMgSW1wb3J0aW5nIHRoZSBkYXRhc2V0IGZyb20gYSBsb2NhbCBwYXRoIGluIG15IGNvbXB1dGVyDQpkYXRhIDwtIHJlYWQuY3N2KCJDOi9Vc2Vycy9TYW1haGVyL0RvY3VtZW50cy9EU0VfUl9Qcm9qZWN0L2RhdGEuY3N2IikNCg0KIyBDb252ZXJ0aW5nIGl0IGludG8gYSB0aWJibGUNCmRhdGEgPC0gYXMudGliYmxlKGRhdGEpDQoNCmBgYA0KDQoNCiMjIyMgKiozLjMgUHJldmlld2luZyB0aGUgZGF0YXNldDoqKg0KDQpgYGB7cn0NCiMgVW5kZXJzdGFuZGluZyB0aGUgc3RydWN0dXJlIG9mIHRoZSBkYXRhc2V0DQpzdHIoZGF0YSkNCmBgYA0KDQpgYGB7cn0NCiMgRGlzcGxheWluZyBhIHNhbXBsZSBvZiB0aGUgZGF0YQ0KaGVhZChkYXRhKQ0KYGBgDQoNCg0KIyMjIyAqKjMuNCBDbGVhbmluZyBhbmQgZm9ybWF0dGluZyB0aGUgZGF0YXNldDoqKg0KDQojIyMjIyAqKjMuNC4xIEV4cGVyaWVuY2UgTGV2ZWw6KioNCg0KVGhlcmUgYXJlIDQgZXhwZXJpZW5jZSBsZXZlbHMgaW4gdGhpcyBkYXRhc2V0Og0KDQotIEVOID0gRW50cnkgTGV2ZWwNCg0KLSBNSSA9IE1pZC1MZXZlbA0KDQotIFNFID0gU2VuaW9yDQoNCi0gRVggPSBFeGVjdXRpdmUNCg0KDQpgYGB7cn0NCiMgQ2hlY2tpbmcgaG93IG1hbnkgZXhwZXJpZW5jZSBsZXZlbHMgYXJlIGluY2x1ZGVkIGluIHRoaXMgZGF0YXNldA0KdGFibGUoZGF0YSRleHBlcmllbmNlX2xldmVsKQ0KYGBgDQpMZXQncyBtYWtlIHRob3NlIGxldmVscyB1bmRlcnN0YW5kYWJsZSBieSBhbnlvbmUgd2hvIHJlYWRzIHRoZW0hDQoNCmBgYHtyfQ0KIyBSZXBsYWNpbmcgYWJicmV2aWF0aW9ucyB3aXRoIGZ1bGwgZGVzY3JpcHRpb25zIGluIHRoZSAnZXhwZXJpZW5jZV9sZXZlbCcgY29sdW1uDQpkYXRhJGV4cGVyaWVuY2VfbGV2ZWwgPC0gaWZlbHNlKGRhdGEkZXhwZXJpZW5jZV9sZXZlbCA9PSAiRU4iLCAiZW50cnkgbGV2ZWwiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgaWZlbHNlKGRhdGEkZXhwZXJpZW5jZV9sZXZlbCA9PSAiRVgiLCAiZXhlY3V0aXZlIiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmZWxzZShkYXRhJGV4cGVyaWVuY2VfbGV2ZWwgPT0gIk1JIiwgIm1pZC1sZXZlbCIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICBpZmVsc2UoZGF0YSRleHBlcmllbmNlX2xldmVsID09ICJTRSIsICJzZW5pb3IiLCBkYXRhJGV4cGVyaWVuY2VfbGV2ZWwpKSkpDQoNCiMgQ2hlY2tpbmcgdGhlIHVwZGF0ZWQgJ2V4cGVyaWVuY2VfbGV2ZWwnIGNvbHVtbg0KdGFibGUoZGF0YSRleHBlcmllbmNlX2xldmVsKQ0KYGBgDQoNCiMjIyMjICoqMy40LjIgRW1wbG95bWVudCBUeXBlOioqDQoNClRoZXJlIGFyZSA0IGVtcGxveW1lbnQgdHlwZXMgaW4gdGhpcyBkYXRhc2V0Og0KDQotIEZUID0gZnVsbC10aW1lDQoNCi0gUFQgPSBwYXJ0LXRpbWUNCg0KLSBDVCA9IGNvbnRyYWN0DQoNCi0gRkwgPSBmcmVlbGFuY2UNCg0KYGBge3J9DQp0YWJsZShkYXRhJGVtcGxveW1lbnRfdHlwZSkNCmBgYA0KSSB3aWxsIHJlcGxhY2UgdGhvc2UgYWJicmV2aWF0aW9ucyB3aXRoIHRoZSBmdWxsIHdvcmQgZm9yIGJldHRlciByZWFkYWJpbGl0eS4NCg0KYGBge3J9DQojIFJlcGxhY2luZyBhYmJyZXZpYXRpb25zIHdpdGggZnVsbCBkZXNjcmlwdGlvbnMgaW4gdGhlICdlbXBsb3ltZW50X3R5cGUnIGNvbHVtbg0KZGF0YSRlbXBsb3ltZW50X3R5cGUgPC0gaWZlbHNlKGRhdGEkZW1wbG95bWVudF90eXBlID09ICJDVCIsICJjb250cmFjdCIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaWZlbHNlKGRhdGEkZW1wbG95bWVudF90eXBlID09ICJGTCIsICJmcmVlbGFuY2UiLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpZmVsc2UoZGF0YSRlbXBsb3ltZW50X3R5cGUgPT0gIkZUIiwgImZ1bGwtdGltZSIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpZmVsc2UoZGF0YSRlbXBsb3ltZW50X3R5cGUgPT0gIlBUIiwgInBhcnQtdGltZSIsIGRhdGEkZW1wbG95bWVudF90eXBlKSkpKQ0KDQojIENoZWNraW5nIHRoZSB1cGRhdGVkICdlbXBsb3ltZW50X3R5cGUnIGNvbHVtbg0KdGFibGUoZGF0YSRlbXBsb3ltZW50X3R5cGUpDQpgYGANCg0KIyMjIyMgKiozLjQuMyBTYWxhcmllczoqKg0KDQpXaGVuIGl0IGNvbWVzIHRvIHNhbGFyaWVzLCB3ZSBjYW4gc2VlIHRoYXQgdGhlcmUgYXJlIDMgY29sdW1uczogDQoxLiBgc2FsYXJ5YA0KMi4gYHNhbGFyeV9jdXJyZW5jeWANCjMuIGBzYWxhcnlfaW5fdXNkYCANCg0KVGhlIHNhbGFyaWVzLCBzdG9yZWQgaW4gYHNhbGFyeWAgY29sdW1uLCBhcmUgY29sbGVjdGVkIGluIGxvY2FsIGN1cnJlbmNpZXMsIG1lbnRpb25lZCBpbiBgc2FsYXJ5X2N1cnJlbmN5YCBjb2x1bW4uIFRoZW4sIGFsbCB0aG9zZSBzYWxhcmllcyB3ZXJlIGNvbnZlcnRlZCB0byBVU0QgYW5kIHN0b3JlZCBpbiBgc2FsYXJ5X2luX3VzZGAuIA0KDQpgYGB7cn0NCnRhYmxlKGRhdGEkc2FsYXJ5X2N1cnJlbmN5KQ0KYGBgDQoNCkZvciB0aGUgcHVycG9zZSBvZiB0aGlzIHN0dWR5LCBpdCB3b3VsZCBiZSBiZXR0ZXIgdG8gaGF2ZSB0aGUgc2FsYXJpZXMgaW4gRVVSLiBUaGF0J3Mgd2h5IEkgd2lsbCByZXBsYWNlIHRoZSBgc2FsYXJ5X2luX3VzZGAgY29sdW1uIHdpdGggYHNhbGFyeV9pbl9ldXJgIGFuZCBjb252ZXJ0IHRoZSBzYWxhcmllcyB0byBFVVIuIEkgd2lsbCBhbHNvIHJlbW92ZSB0aGUgYHNhbGFyeWAgYW5kIGBzYWxhcnlfY3VycmVjbnlgIGNvbHVtbnMgc2luY2UgdGhleSBhcmUgbm8gbG9uZ2VyIG5lZWRlZC4gDQoNClRoZSBleGNoYW5nZSByYXRlIGZvciB0aGUgY29udmVyc2lvbiBmcm9tIFVTRCB0byBFVVIgaXMgYXMgZm9sbG93czoNCg0KMSBVbml0ZWQgU3RhdGVzIERvbGxhciBlcXVhbHMNCjAuOTIgRXVybw0KDQpQLlMuIFRoZSBkYXRlIG9mIHRoaXMgY29udmVyc2lvbiBpczogRGVjIDE2LCAwOToxMiBVVEMNCg0KDQpgYGB7cn0NCiMgR2l2ZW4gZXhjaGFuZ2UgcmF0ZQ0KZXhjaGFuZ2VfcmF0ZSA8LSAwLjkyDQoNCiMgQ29udmVydGluZyBVU0Qgc2FsYXJpZXMgdG8gRVVSDQpkYXRhJHNhbGFyeV9pbl91c2QgPC0gZGF0YSRzYWxhcnlfaW5fdXNkICogZXhjaGFuZ2VfcmF0ZQ0KDQojIENoYW5naW5nIGNvbHVtbiBuYW1lIHRvIGJldHRlciByZWZsZWN0IHRoaXMgY2hhbmdlDQpuYW1lcyhkYXRhKVtuYW1lcyhkYXRhKSA9PSAic2FsYXJ5X2luX3VzZCJdIDwtICJzYWxhcnlfaW5fZXVyIg0KYGBgDQoNCmBgYHtyfQ0KIyBSZW1vdmluZyB0aGUgc2FsYXJ5IGFuZCBzYWxhcnlfY3VycmVuY3kgY29sdW1ucw0KZGF0YSA8LSBzdWJzZXQoZGF0YSwgc2VsZWN0ID0gLWMoc2FsYXJ5LCBzYWxhcnlfY3VycmVuY3kpKQ0KYGBgDQoNCiMjIyMjICoqMy40LjQgQ291bnRyaWVzOioqDQoNCiMjIyMjIyAqKjMuNC40LjEgQ29tcGFueSBMb2NhdGlvbjoqKg0KDQpUaGUgY29sdW1uIGBjb21wYW55X2xvY2F0aW9uYCByZWZsZWN0cyB0aGUgY291bnRyaWVzIHdoZXJlIHRoZSBjb21wYW5pZXMgYXJlIGVzdGFibGlzaGVkLiBUaG9zZSBjb3VudHJpZXMgYXJlIHdyaXR0ZW4gYXMgYWJicmV2aWF0aW9ucy4gV2hpbGUgc29tZSBjb3VudHJ5IGFiYnJldmlhdGlvbnMgYXJlIHdpZGVseSBrbm93biwgdGhlcmUgYXJlIG90aGVycyB0aGF0IGFyZSBsZXNzIGtub3duLiANCg0KYGBge3J9DQp0YWJsZShkYXRhJGNvbXBhbnlfbG9jYXRpb24pDQpgYGANCg0KDQpUbyBlbnN1cmUgY2xhcml0eSwgSSBkZWNpZGVkIHRvIHJlcGxhY2UgdGhlIGFiYnJldmlhdGlvbnMgd2l0aCB0aGUgZnVsbCBjb3VudHJ5IG5hbWVzLg0KDQpgYGB7cn0NCiMgRGVmaW5pbmcgYSBtYXBwaW5nIG9mIGNvdW50cnkgY29kZXMgdG8gY291bnRyeSBuYW1lcyBmb3IgY29tcGFueSBsb2NhdGlvbnMNCmNsX2NvdW50cnlfbWFwcGluZyA8LSBjKA0KICBBRSA9ICJVbml0ZWQgQXJhYiBFbWlyYXRlcyIsDQogIEFMID0gIkFsYmFuaWEiLA0KICBBTSA9ICJBcm1lbmlhIiwNCiAgQVIgPSAiQXJnZW50aW5hIiwNCiAgQVMgPSAiQW1lcmljYW4gU2Ftb2EiLA0KICBBVCA9ICJBdXN0cmlhIiwNCiAgQVUgPSAiQXVzdHJhbGlhIiwNCiAgQkEgPSAiQm9zbmlhIGFuZCBIZXJ6ZWdvdmluYSIsDQogIEJFID0gIkJlbGdpdW0iLA0KICBCTyA9ICJCb2xpdmlhIiwNCiAgQlIgPSAiQnJhemlsIiwNCiAgQlMgPSAiQmFoYW1hcyIsDQogIENBID0gIkNhbmFkYSIsDQogIENGID0gIkNlbnRyYWwgQWZyaWNhbiBSZXB1YmxpYyIsDQogIENIID0gIlN3aXR6ZXJsYW5kIiwNCiAgQ0wgPSAiQ2hpbGUiLA0KICBDTiA9ICJDaGluYSIsDQogIENPID0gIkNvbG9tYmlhIiwNCiAgQ1IgPSAiQ29zdGEgUmljYSIsDQogIENaID0gIkN6ZWNoIFJlcHVibGljIiwNCiAgREUgPSAiR2VybWFueSIsDQogIERLID0gIkRlbm1hcmsiLA0KICBEWiA9ICJBbGdlcmlhIiwNCiAgRUUgPSAiRXN0b25pYSIsDQogIEVHID0gIkVneXB0IiwNCiAgRVMgPSAiU3BhaW4iLA0KICBGSSA9ICJGaW5sYW5kIiwNCiAgRlIgPSAiRnJhbmNlIiwNCiAgR0IgPSAiVW5pdGVkIEtpbmdkb20iLA0KICBHSCA9ICJHaGFuYSIsDQogIEdSID0gIkdyZWVjZSIsDQogIEhLID0gIkhvbmcgS29uZyIsDQogIEhOID0gIkhvbmR1cmFzIiwNCiAgSFIgPSAiQ3JvYXRpYSIsDQogIEhVID0gIkh1bmdhcnkiLA0KICBJRCA9ICJJbmRvbmVzaWEiLA0KICBJRSA9ICJJcmVsYW5kIiwNCiAgSU4gPSAiSW5kaWEiLA0KICBJUSA9ICJJcmFxIiwNCiAgSVIgPSAiSXJhbiIsDQogIElUID0gIkl0YWx5IiwNCiAgSlAgPSAiSmFwYW4iLA0KICBLRSA9ICJLZW55YSIsDQogIExUID0gIkxpdGh1YW5pYSIsDQogIExVID0gIkx1eGVtYm91cmciLA0KICBMViA9ICJMYXR2aWEiLA0KICBNQSA9ICJNb3JvY2NvIiwNCiAgTUQgPSAiTW9sZG92YSIsDQogIE1LID0gIk5vcnRoIE1hY2Vkb25pYSIsDQogIE1UID0gIk1hbHRhIiwNCiAgTVggPSAiTWV4aWNvIiwNCiAgTVkgPSAiTWFsYXlzaWEiLA0KICBORyA9ICJOaWdlcmlhIiwNCiAgTkwgPSAiTmV0aGVybGFuZHMiLA0KICBOWiA9ICJOZXcgWmVhbGFuZCIsDQogIFBIID0gIlBoaWxpcHBpbmVzIiwNCiAgUEsgPSAiUGFraXN0YW4iLA0KICBQTCA9ICJQb2xhbmQiLA0KICBQUiA9ICJQdWVydG8gUmljbyIsDQogIFBUID0gIlBvcnR1Z2FsIiwNCiAgUk8gPSAiUm9tYW5pYSIsDQogIFJVID0gIlJ1c3NpYSIsDQogIFNFID0gIlN3ZWRlbiIsDQogIFNHID0gIlNpbmdhcG9yZSIsDQogIFNJID0gIlNsb3ZlbmlhIiwNCiAgU0sgPSAiU2xvdmFraWEiLA0KICBUSCA9ICJUaGFpbGFuZCIsDQogIFRSID0gIlR1cmtleSIsDQogIFVBID0gIlVrcmFpbmUiLA0KICBVUyA9ICJVbml0ZWQgU3RhdGVzIiwNCiAgVk4gPSAiVmlldG5hbSINCikNCg0KIyBSZXBsYWNpbmcgdmFsdWVzIGluIHRoZSAnY29tcGFueV9sb2NhdGlvbicgY29sdW1uIHVzaW5nIHRoZSBtYXBwaW5nIGNyZWF0ZWQgYWJvdmUNCmRhdGEkY29tcGFueV9sb2NhdGlvbiA8LSBjbF9jb3VudHJ5X21hcHBpbmdbZGF0YSRjb21wYW55X2xvY2F0aW9uXQ0KDQpgYGANCg0KDQojIyMjIyMgKiozLjQuNC4yIEVtcGxveWVlIFJlc2lkZW5jZToqKg0KDQpOb3csIHdlJ2xsIGRvIHRoZSBzYW1lIHByb2Nlc3MgZm9yIGBlbXBsb3llZV9yZXNpZGVuY2VgIGNvbHVtbi4gDQoNCmBgYHtyfQ0KI0NoZWNraW5nIHdoaWNoIGNvdW50cmllcyBhcmUgaW5jbHVkZWQNCnRhYmxlKGRhdGEkZW1wbG95ZWVfcmVzaWRlbmNlKQ0KYGBgDQpgYGB7cn0NCiMgRGVmaW5pbmcgYSBtYXBwaW5nIG9mIGNvdW50cnkgY29kZXMgdG8gY291bnRyeSBuYW1lcyBmb3IgZW1wbG95ZWUgcmVzaWRlbmNlDQoNCmVyX2NvdW50cnlfbWFwcGluZyA8LSBjKA0KICBBRSA9ICJVbml0ZWQgQXJhYiBFbWlyYXRlcyIsDQogIEFNID0gIkFybWVuaWEiLA0KICBBUiA9ICJBcmdlbnRpbmEiLA0KICBBUyA9ICJBbWVyaWNhbiBTYW1vYSIsDQogIEFUID0gIkF1c3RyaWEiLA0KICBBVSA9ICJBdXN0cmFsaWEiLA0KICBCQSA9ICJCb3NuaWEgYW5kIEhlcnplZ292aW5hIiwNCiAgQkUgPSAiQmVsZ2l1bSIsDQogIEJHID0gIkJ1bGdhcmlhIiwNCiAgQk8gPSAiQm9saXZpYSIsDQogIEJSID0gIkJyYXppbCIsDQogIENBID0gIkNhbmFkYSIsDQogIENGID0gIkNlbnRyYWwgQWZyaWNhbiBSZXB1YmxpYyIsDQogIENIID0gIlN3aXR6ZXJsYW5kIiwNCiAgQ0wgPSAiQ2hpbGUiLA0KICBDTiA9ICJDaGluYSIsDQogIENPID0gIkNvbG9tYmlhIiwNCiAgQ1IgPSAiQ29zdGEgUmljYSIsDQogIENZID0gIkN5cHJ1cyIsDQogIENaID0gIkN6ZWNoIFJlcHVibGljIiwNCiAgREUgPSAiR2VybWFueSIsDQogIERLID0gIkRlbm1hcmsiLA0KICBETyA9ICJEb21pbmljYW4gUmVwdWJsaWMiLA0KICBEWiA9ICJBbGdlcmlhIiwNCiAgRUUgPSAiRXN0b25pYSIsDQogIEVHID0gIkVneXB0IiwNCiAgRVMgPSAiU3BhaW4iLA0KICBGSSA9ICJGaW5sYW5kIiwNCiAgRlIgPSAiRnJhbmNlIiwNCiAgR0IgPSAiVW5pdGVkIEtpbmdkb20iLA0KICBHSCA9ICJHaGFuYSIsDQogIEdSID0gIkdyZWVjZSIsDQogIEhLID0gIkhvbmcgS29uZyIsDQogIEhOID0gIkhvbmR1cmFzIiwNCiAgSFIgPSAiQ3JvYXRpYSIsDQogIEhVID0gIkh1bmdhcnkiLA0KICBJRCA9ICJJbmRvbmVzaWEiLA0KICBJRSA9ICJJcmVsYW5kIiwNCiAgSU4gPSAiSW5kaWEiLA0KICBJUSA9ICJJcmFxIiwNCiAgSVIgPSAiSXJhbiIsDQogIElUID0gIkl0YWx5IiwNCiAgSkUgPSAiSmVyc2V5IiwNCiAgSlAgPSAiSmFwYW4iLA0KICBLRSA9ICJLZW55YSIsDQogIEtXID0gIkt1d2FpdCIsDQogIExUID0gIkxpdGh1YW5pYSIsDQogIExVID0gIkx1eGVtYm91cmciLA0KICBMViA9ICJMYXR2aWEiLA0KICBNQSA9ICJNb3JvY2NvIiwNCiAgTUQgPSAiTW9sZG92YSIsDQogIE1LID0gIk5vcnRoIE1hY2Vkb25pYSIsDQogIE1UID0gIk1hbHRhIiwNCiAgTVggPSAiTWV4aWNvIiwNCiAgTVkgPSAiTWFsYXlzaWEiLA0KICBORyA9ICJOaWdlcmlhIiwNCiAgTkwgPSAiTmV0aGVybGFuZHMiLA0KICBOWiA9ICJOZXcgWmVhbGFuZCIsDQogIFBIID0gIlBoaWxpcHBpbmVzIiwNCiAgUEsgPSAiUGFraXN0YW4iLA0KICBQTCA9ICJQb2xhbmQiLA0KICBQUiA9ICJQdWVydG8gUmljbyIsDQogIFBUID0gIlBvcnR1Z2FsIiwNCiAgUk8gPSAiUm9tYW5pYSIsDQogIFJTID0gIlNlcmJpYSIsDQogIFJVID0gIlJ1c3NpYSIsDQogIFNFID0gIlN3ZWRlbiIsDQogIFNHID0gIlNpbmdhcG9yZSIsDQogIFNJID0gIlNsb3ZlbmlhIiwNCiAgU0sgPSAiU2xvdmFraWEiLA0KICBUSCA9ICJUaGFpbGFuZCIsDQogIFROID0gIlR1bmlzaWEiLA0KICBUUiA9ICJUdXJrZXkiLA0KICBVQSA9ICJVa3JhaW5lIiwNCiAgVVMgPSAiVW5pdGVkIFN0YXRlcyIsDQogIFVaID0gIlV6YmVraXN0YW4iLA0KICBWTiA9ICJWaWV0bmFtIg0KKQ0KDQojIFJlcGxhY2luZyB2YWx1ZXMgaW4gdGhlICdlbXBsb3llZV9yZXNpZGVuY2UnIGNvbHVtbiB1c2luZyB0aGUgbWFwcGluZyBjcmVhdGVkIGFib3ZlDQpkYXRhJGVtcGxveWVlX3Jlc2lkZW5jZSA8LSBlcl9jb3VudHJ5X21hcHBpbmdbZGF0YSRlbXBsb3llZV9yZXNpZGVuY2VdDQoNCmBgYA0KDQoNCg0KIyMjICoqNC4gRGF0YSBBbmFseXNpcyoqDQoNCiMjIyAqKjUuIENvbmNsdXNpb24qKg0KDQo=</div>
 
 
 

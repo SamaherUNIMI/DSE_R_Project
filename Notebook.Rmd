@@ -35,7 +35,7 @@ The *Salary of Data Scientists* dataset will be used for this analysis. It is ma
 
 - `salary_currency`: The currency of the salary paid as an ISO 4217 currency code.
 
-- `salarioinusd`: The salary in USD
+- `salary_in_usd`: The salary in USD
 
 - `employee_residence`: the country of primary residence of the employee during the employment year as an ISO 3166 country code.
 
@@ -95,6 +95,296 @@ head(data)
 
 
 #### **3.4 Cleaning and formatting the dataset:**
+
+##### **3.4.1 Experience Level:**
+
+There are 4 experience levels in this dataset:
+
+- EN = Entry Level
+
+- MI = Mid-Level
+
+- SE = Senior
+
+- EX = Executive
+
+
+```{r}
+# Checking how many experience levels are included in this dataset
+table(data$experience_level)
+```
+Let's make those levels understandable by anyone who reads them!
+
+```{r}
+# Replacing abbreviations with full descriptions in the 'experience_level' column
+data$experience_level <- ifelse(data$experience_level == "EN", "entry level",
+                           ifelse(data$experience_level == "EX", "executive",
+                           ifelse(data$experience_level == "MI", "mid-level",
+                           ifelse(data$experience_level == "SE", "senior", data$experience_level))))
+
+# Checking the updated 'experience_level' column
+table(data$experience_level)
+```
+
+##### **3.4.2 Employment Type:**
+
+There are 4 employment types in this dataset:
+
+- FT = full-time
+
+- PT = part-time
+
+- CT = contract
+
+- FL = freelance
+
+```{r}
+table(data$employment_type)
+```
+I will replace those abbreviations with the full word for better readability.
+
+```{r}
+# Replacing abbreviations with full descriptions in the 'employment_type' column
+data$employment_type <- ifelse(data$employment_type == "CT", "contract",
+                               ifelse(data$employment_type == "FL", "freelance",
+                                      ifelse(data$employment_type == "FT", "full-time",
+                                             ifelse(data$employment_type == "PT", "part-time", data$employment_type))))
+
+# Checking the updated 'employment_type' column
+table(data$employment_type)
+```
+
+##### **3.4.3 Salaries:**
+
+When it comes to salaries, we can see that there are 3 columns: 
+1. `salary`
+2. `salary_currency`
+3. `salary_in_usd` 
+
+The salaries, stored in `salary` column, are collected in local currencies, mentioned in `salary_currency` column. Then, all those salaries were converted to USD and stored in `salary_in_usd`. 
+
+```{r}
+table(data$salary_currency)
+```
+
+For the purpose of this study, it would be better to have the salaries in EUR. That's why I will replace the `salary_in_usd` column with `salary_in_eur` and convert the salaries to EUR. I will also remove the `salary` and `salary_currecny` columns since they are no longer needed. 
+
+The exchange rate for the conversion from USD to EUR is as follows:
+
+1 United States Dollar equals
+0.92 Euro
+
+P.S. The date of this conversion is: Dec 16, 09:12 UTC
+
+
+```{r}
+# Given exchange rate
+exchange_rate <- 0.92
+
+# Converting USD salaries to EUR
+data$salary_in_usd <- data$salary_in_usd * exchange_rate
+
+# Changing column name to better reflect this change
+names(data)[names(data) == "salary_in_usd"] <- "salary_in_eur"
+```
+
+```{r}
+# Removing the salary and salary_currency columns
+data <- subset(data, select = -c(salary, salary_currency))
+```
+
+##### **3.4.4 Countries:**
+
+###### **3.4.4.1 Company Location:**
+
+The column `company_location` reflects the countries where the companies are established. Those countries are written as abbreviations. While some country abbreviations are widely known, there are others that are less known. 
+
+```{r}
+table(data$company_location)
+```
+
+
+To ensure clarity, I decided to replace the abbreviations with the full country names.
+
+```{r}
+# Defining a mapping of country codes to country names for company locations
+cl_country_mapping <- c(
+  AE = "United Arab Emirates",
+  AL = "Albania",
+  AM = "Armenia",
+  AR = "Argentina",
+  AS = "American Samoa",
+  AT = "Austria",
+  AU = "Australia",
+  BA = "Bosnia and Herzegovina",
+  BE = "Belgium",
+  BO = "Bolivia",
+  BR = "Brazil",
+  BS = "Bahamas",
+  CA = "Canada",
+  CF = "Central African Republic",
+  CH = "Switzerland",
+  CL = "Chile",
+  CN = "China",
+  CO = "Colombia",
+  CR = "Costa Rica",
+  CZ = "Czech Republic",
+  DE = "Germany",
+  DK = "Denmark",
+  DZ = "Algeria",
+  EE = "Estonia",
+  EG = "Egypt",
+  ES = "Spain",
+  FI = "Finland",
+  FR = "France",
+  GB = "United Kingdom",
+  GH = "Ghana",
+  GR = "Greece",
+  HK = "Hong Kong",
+  HN = "Honduras",
+  HR = "Croatia",
+  HU = "Hungary",
+  ID = "Indonesia",
+  IE = "Ireland",
+  IN = "India",
+  IQ = "Iraq",
+  IR = "Iran",
+  IT = "Italy",
+  JP = "Japan",
+  KE = "Kenya",
+  LT = "Lithuania",
+  LU = "Luxembourg",
+  LV = "Latvia",
+  MA = "Morocco",
+  MD = "Moldova",
+  MK = "North Macedonia",
+  MT = "Malta",
+  MX = "Mexico",
+  MY = "Malaysia",
+  NG = "Nigeria",
+  NL = "Netherlands",
+  NZ = "New Zealand",
+  PH = "Philippines",
+  PK = "Pakistan",
+  PL = "Poland",
+  PR = "Puerto Rico",
+  PT = "Portugal",
+  RO = "Romania",
+  RU = "Russia",
+  SE = "Sweden",
+  SG = "Singapore",
+  SI = "Slovenia",
+  SK = "Slovakia",
+  TH = "Thailand",
+  TR = "Turkey",
+  UA = "Ukraine",
+  US = "United States",
+  VN = "Vietnam"
+)
+
+# Replacing values in the 'company_location' column using the mapping created above
+data$company_location <- cl_country_mapping[data$company_location]
+
+```
+
+
+###### **3.4.4.2 Employee Residence:**
+
+Now, we'll do the same process for `employee_residence` column. 
+
+```{r}
+#Checking which countries are included
+table(data$employee_residence)
+```
+```{r}
+# Defining a mapping of country codes to country names for employee residence
+
+er_country_mapping <- c(
+  AE = "United Arab Emirates",
+  AM = "Armenia",
+  AR = "Argentina",
+  AS = "American Samoa",
+  AT = "Austria",
+  AU = "Australia",
+  BA = "Bosnia and Herzegovina",
+  BE = "Belgium",
+  BG = "Bulgaria",
+  BO = "Bolivia",
+  BR = "Brazil",
+  CA = "Canada",
+  CF = "Central African Republic",
+  CH = "Switzerland",
+  CL = "Chile",
+  CN = "China",
+  CO = "Colombia",
+  CR = "Costa Rica",
+  CY = "Cyprus",
+  CZ = "Czech Republic",
+  DE = "Germany",
+  DK = "Denmark",
+  DO = "Dominican Republic",
+  DZ = "Algeria",
+  EE = "Estonia",
+  EG = "Egypt",
+  ES = "Spain",
+  FI = "Finland",
+  FR = "France",
+  GB = "United Kingdom",
+  GH = "Ghana",
+  GR = "Greece",
+  HK = "Hong Kong",
+  HN = "Honduras",
+  HR = "Croatia",
+  HU = "Hungary",
+  ID = "Indonesia",
+  IE = "Ireland",
+  IN = "India",
+  IQ = "Iraq",
+  IR = "Iran",
+  IT = "Italy",
+  JE = "Jersey",
+  JP = "Japan",
+  KE = "Kenya",
+  KW = "Kuwait",
+  LT = "Lithuania",
+  LU = "Luxembourg",
+  LV = "Latvia",
+  MA = "Morocco",
+  MD = "Moldova",
+  MK = "North Macedonia",
+  MT = "Malta",
+  MX = "Mexico",
+  MY = "Malaysia",
+  NG = "Nigeria",
+  NL = "Netherlands",
+  NZ = "New Zealand",
+  PH = "Philippines",
+  PK = "Pakistan",
+  PL = "Poland",
+  PR = "Puerto Rico",
+  PT = "Portugal",
+  RO = "Romania",
+  RS = "Serbia",
+  RU = "Russia",
+  SE = "Sweden",
+  SG = "Singapore",
+  SI = "Slovenia",
+  SK = "Slovakia",
+  TH = "Thailand",
+  TN = "Tunisia",
+  TR = "Turkey",
+  UA = "Ukraine",
+  US = "United States",
+  UZ = "Uzbekistan",
+  VN = "Vietnam"
+)
+
+# Replacing values in the 'employee_residence' column using the mapping created above
+data$employee_residence <- er_country_mapping[data$employee_residence]
+
+```
+
+
 
 ### **4. Data Analysis**
 
