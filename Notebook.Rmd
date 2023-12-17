@@ -70,6 +70,8 @@ library(ggplot2)
 library(dplyr)
 library(sf)
 library(rnaturalearth)
+library(scales)
+library(viridis) 
 
 ```
 
@@ -665,6 +667,111 @@ The most dominant roles include "Data Engineer," "Data Scientist," and "Data Ana
 
 
 ##### **4.1.3 Bivariate Analysis**
+
+###### **4.1.3.1 Salary Vs. Company Location**
+
+In this analysis, we'll explore the comparative average salaries across various countries where data employees are employed, focusing on the `company_location` variable. Using this information, we aim to visualize and understand the differences in average salaries by country. The approach involves calculating the mean salary for each country listed in the dataset and presenting this information on a world map. This visualization will provide a clearer perspective on the regional discrepancies in salaries within the data industry.
+
+```{r}
+# Creating a dataframe with company locations and average salary for each country
+salary_location_df <- data %>%
+  group_by(company_location) %>%
+  summarise(avg_salary = mean(salary_in_eur, na.rm = TRUE)) %>% # Calculating the average salary
+  arrange(desc(avg_salary))  # Sorting by average salary in descending order
+
+# Getting world map data
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Merging company_location_df with world map data
+map_data <- merge(world, salary_location_df, by.x = "name", by.y = "company_location", all.x = TRUE)
+
+# Plotting
+ggplot() +
+  geom_sf(data = map_data, aes(fill = avg_salary)) +
+  scale_fill_gradient(low = "#5bc8af", high = "#202060") +
+  theme_minimal()
+
+```
+This map indicates that when it comes to average salaries for data employees, there's a big difference between countries. Let dig deeper to see which are the top 10 countries with the highest average salaries. 
+
+```{r}
+# Selecting the top 10 countries
+top_10_countries <- head(salary_location_df, 10)
+
+# Creating a bar plot for top 10 countries with highest average salaries
+ggplot(top_10_countries, aes(x = reorder(company_location, -avg_salary), y = avg_salary)) +
+  geom_bar(stat = "identity", fill = "#5bc8af") +
+  labs(title = "Top 10 Countries with Highest Average Salaries",
+       x = "Company Location", y = "Average Salary") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+Puerto Rico seems to offer the highest salaries among these top 10 countries. The United States, Russia, and Canada follow closely behind.
+
+###### **4.1.3.2 Salary Vs. Job Title**
+
+
+```{r}
+
+# Creating a dataframe with job titles and their average salary
+salary_jobtitle_df <- data %>%
+  group_by(job_title) %>%
+  summarise(avg_salary = mean(salary_in_eur, na.rm = TRUE))  
+
+# Sorting by average salary in descending order to get the top salaries at the top
+salary_jobtitle_df <- salary_jobtitle_df[order(-salary_jobtitle_df$avg_salary),]
+
+# Selecting the top 10 job titles
+top_10_jobtitles <- head(salary_jobtitle_df, 10)
+
+# Creating a bar plot for the top 10 job titles
+ggplot(top_10_jobtitles, aes(x = reorder(job_title, -avg_salary), y = avg_salary)) +
+  geom_bar(stat = "identity", fill = "#5bc8af") +
+  labs(title = "Top 10 Job Titles by Average Salary", x = "Job Title" , y = "Average Salary" ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_y_continuous(labels = scales::comma, breaks = pretty_breaks(n = 10))  # Formatting the Y-axis labels
+```
+
+###### **4.1.3.3 Salary Vs. Experience Level**
+
+```{r}
+# Reordering experience_level from entry level to executive
+data$experience_level <- factor(data$experience_level, levels = c("entry level", "mid-level", "senior", "executive"))
+
+# Creating boxplot for salaries across experience levels with custom colors
+ggplot(data, aes(x = experience_level, y = salary_in_eur, fill = experience_level)) +
+  geom_boxplot() +
+  labs(title = "Salaries across Experience Levels", x = "Experience Level", y = "Salary in EUR") +
+  scale_fill_manual(values = custom_palette) +  # Adding my favorite colors
+  theme_minimal() +
+  scale_y_continuous(labels = scales::comma, breaks = pretty_breaks(n = 10))
+```
+The boxplot demonstrates variations in salary distributions across experience levels. The executive category exhibits the highest median salary among all categories, followed by the senior level. In contrast, the entry-level category displays the lowest median salary, notably less than €55,000 per year. This suggests a significant disparity in salary distributions across different experience levels, with higher experience levels generally commanding higher salaries.
+
+We can also include a violin plot to the boxplot to see both the distribution of the data and its summary statistics.
+
+```{r}
+# Calculate sample size for each experience level
+sample_size <- data %>% 
+  group_by(experience_level) %>%     
+  summarize(num = n())               
+
+# Joining the datasets based on the experience_level column
+data_with_size <- left_join(data, sample_size, by = "experience_level") %>%
+  mutate(myaxis = paste0(experience_level, "\n", "n=", num)) # Creating a new column 'myaxis' combining experience level and sample size
+
+# Plot
+ggplot(data_with_size, aes(x = myaxis, y = salary_in_eur, fill = experience_level)) +
+  geom_violin(width = 0.7, position = position_dodge(width = 0.6)) +
+  geom_boxplot(width = 0.1, color = "white", alpha = 0.2, position = position_dodge(width = 0.6)) +
+  scale_fill_manual(values = custom_palette) +  # Adding my favorite colors
+  theme_minimal() +
+  ggtitle("Salaries across Experience Levels") +
+  xlab("") +
+  ylab("Salary in EUR")+
+  scale_y_continuous(labels = scales::comma, breaks = pretty_breaks(n = 10))
+```
+
 
 #### **4.2 Further Analysis (Based on EDA Findings)**
 
