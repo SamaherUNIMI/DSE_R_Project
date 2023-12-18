@@ -443,7 +443,7 @@ top_10_jobtitles_entry_europe <- head(sorted_data_europe, 10)
 # Creating the bar plot
 top_10_jobttitle_entry_eu <- ggplot(top_10_jobtitles_entry_europe, aes(x = reorder(job_title, salary_in_eur), y = salary_in_eur)) +
   geom_bar(stat = "identity", fill = "#5bc8af") +
-  labs(title = "Top 10 Job Titles with Highest Avg Salary (Entry Level in Europe)", x = "Job Title", y = "Average Salary") +
+  labs(title = "10 Highest-Paying Entry Level Data Roles in Europe", x = "Job Title", y = "Average Salary") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   coord_flip()  # To display the bars horizontally
 
@@ -464,7 +464,7 @@ map_data_europe <- merge(europe_map, avg_salary_entry_level_europe, by.x = "name
 countries_entry_salary_eu <- ggplot() +
   geom_sf(data = map_data_europe, aes(fill = avg_salary)) +
   scale_fill_gradient(low = "#5bc8af", high = "#202060") +
-  labs(title = "Average Salary for Entry Level in European Countries") +
+  labs(title = "Average Salary for Entry Level in EU Countries") +
   theme_minimal()
 
 # Sorting the data by average salary in descending order
@@ -473,7 +473,7 @@ top_10_countries_eu <- head(avg_salary_entry_level_europe[order(-avg_salary_entr
 # Creating a bar plot for the top 10 European countries with the highest average salaries
 top_10_eu_salary_entry <- ggplot(top_10_countries_eu, aes(x = reorder(company_location, avg_salary), y = avg_salary)) +
   geom_bar(stat = "identity", fill = "#5bc8af") +
-  labs(title = "Top 10 European Countries with Highest Average Salaries (Entry Level)", x = "Country", y = "Average Salary") +
+  labs(title = "Top 10 EU Countries with Highest Avg Salaries (Entry Level)", x = "Country", y = "Average Salary") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   coord_flip()
 
@@ -489,7 +489,7 @@ top_10_eu_salary_entry <- ggplot(top_10_countries_eu, aes(x = reorder(company_lo
 plot(salary_distribution)
 ```
 
-### Salary Distribution
+### Remote Ratio Distribution
 
 ```{r}
 plot(remote_distribution)
@@ -525,8 +525,7 @@ plot(emp_type_pie)
 
 ### Salary Vs. Company Location
 
-
-```{r}
+```{r, fig.width=12, fig.height=9}
 plot(salary_location_map)
 ```
 
