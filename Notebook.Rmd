@@ -824,11 +824,9 @@ ggplot(top_10_jobtitles_entry_europe, aes(x = reorder(job_title, salary_in_eur),
 ##### **4.2.2 Entry Level Salaries Vs. Company Location \| IN EUROPE \|**
 
 ```{r}
-# Filtering data for entry-level roles in European countries
-entry_level_data_europe <- data[data$experience_level == "entry level" & data$company_location %in% european_countries, ]
 
 # Calculating average salary for each country
-avg_salary_entry_level_europe <- entry_level_data_europe %>%
+avg_salary_entry_level_europe <- entry_level_europe %>%
   group_by(company_location) %>%
   summarise(avg_salary = mean(salary_in_eur, na.rm = TRUE)) %>%
   arrange(desc(avg_salary))  # Sorting by average salary in descending order
