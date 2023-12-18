@@ -13,10 +13,11 @@ output:
 
 **Professor**: Giancarlo Manzi
 
-
 ### **1. Introduction**
 
 This study aims to analyze salary differences among Data Scientists and other Data-related roles across different countries. Utilizing a dataset containing diverse employment types, experience levels, and company sizes, the study intends to conduct statistical analyses and visualizations using R. The objective is to identify potential salary disparities and trends across various global contexts. The study aims to shed light on nuanced salary patterns within the data science domain, offering insights into the variations of compensation among data-related roles on a global scale.
+
+I used [**GitHub**](https://github.com/SamaherUNIMI/DSE_R_Project/tree/main) as a tool for version control.
 
 ### **2. Data Used**
 
@@ -60,7 +61,7 @@ The dataset primarily comprises data from the United States, resulting in an imb
 
 #### **3. 1 Installing packages and opening libraries:**
 
--   tidyverse
+For the purpose of this study, I installed and loaded the following libraries:
 
 ```{r}
 library(tidyverse)
@@ -605,10 +606,7 @@ ggplot() +
   geom_sf(data = map_data, aes(fill = log(frequency + 1))) +
   scale_fill_gradient(low = "#5bc8af", high = "#202060") +
   theme_minimal()
-
-
 ```
-
 The United States stands out as the most prominent location, reflecting a high occurrence frequency, followed by Canada, Spain, and several other countries that also have notable but comparatively lower representation.
 
 **F. Employee Residence**
@@ -634,7 +632,6 @@ ggplot() +
   theme_minimal()
 
 ```
-
 Looking at the distribution, it's apparent that the United States has the highest frequency, indicated by the darkest shade on the map. It's followed by Canada, Germany, the United Kingdom, and France, showing relatively high frequencies as well. The lighter shades across various countries denote lower frequencies. Countries such as Tunisia, Algeria, Iraq, Kuwait, American Samoa, Armenia, Bulgaria, Cyprus, Dominican Republic, Iran, Moldova, North Macedonia, Slovakia, and Uzbekistan have the lightest shades, representing the lowest frequency of employee residences.
 
 **G. Job Titles**
@@ -827,10 +824,19 @@ ggplot(top_10_jobtitles_entry_europe, aes(x = reorder(job_title, salary_in_eur),
 ##### **4.2.2 Entry Level Salaries Vs. Company Location \| IN EUROPE \|**
 
 ```{r}
+# Filtering data for entry-level roles in European countries
+entry_level_data_europe <- data[data$experience_level == "entry level" & data$company_location %in% european_countries, ]
+
+# Calculating average salary for each country
+avg_salary_entry_level_europe <- entry_level_data_europe %>%
+  group_by(company_location) %>%
+  summarise(avg_salary = mean(salary_in_eur, na.rm = TRUE)) %>%
+  arrange(desc(avg_salary))  # Sorting by average salary in descending order
+
 # Getting world map data for Europe
 europe_map <- ne_countries(scale = "medium", continent = "Europe", returnclass = "sf")
 
-# Merging salary data with the map data for Europe
+# Merge salary data with the map data for Europe
 map_data_europe <- merge(europe_map, avg_salary_entry_level_europe, by.x = "name", by.y = "company_location", all.x = TRUE)
 
 # Plotting map of Europe showing average salaries for entry level
@@ -839,8 +845,8 @@ ggplot() +
   scale_fill_gradient(low = "#5bc8af", high = "#202060") +
   labs(title = "Average Salary for Entry Level in European Countries") +
   theme_minimal()
-```
 
+```
 To gain a clearer perspective on our findings, let's visualize the data on a bar plot, focusing solely on the top 10 countries exhibiting the highest average salaries.
 
 ```{r}
@@ -855,7 +861,9 @@ ggplot(top_10_countries_eu, aes(x = reorder(company_location, avg_salary), y = a
   coord_flip()
 
 ```
-
 The bar plot reveals a notable disparity in average salaries among European countries. Sweden appears to offer the highest average salary for entry-level roles, followed by Belgium and Germany. There's a substantial variation in salaries, with the top countries showcasing significantly higher averages compared to those at the bottom of the list, such as Luxembourg and Denmark.
 
 ### **5. Conclusion**
+
+Throughout this project, we took a close look at how salaries differ across jobs, experience levels, and countries worldwide. Our exploration highlighted significant disparities: certain roles tend to yield notably higher or lower earnings, and this discrepancy amplifies with experience, with senior and executive positions commanding higher salaries. The geographical element also plays a pivotal role, showcasing substantial variations in earnings across different countries. Using various visualization techniques such as box plots, violin plots, bar plots, and maps helped us see these differences clearly. This study underlines the substantial impact of job type, experience level, and location on income. Looking forward, deeper investigations into the underlying factors behind these disparities, such as industry specifics or skill demands, could provide valuable insights. Additionally, studying salary fluctuations over time might offer further perspectives on these earning differentials. Ultimately, this analysis reveals that where one works, the job they do, and their experience significantly influence their earnings.
+
