@@ -1,0 +1,85 @@
+---
+title: "A Zoom Into Data-Related Jobs"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    favicon: favicon.png
+    theme:
+      version: 4
+      bootswatch: minty
+---
+
+
+# Univariate Analysis {data-orientation=rows}
+
+## Row {.tabset .tabset-fade}
+
+### Numerical Variables {data-height=500}
+
+```{r}
+plot(1:10, main="CHART A")
+
+plot(1:10, main="CHART B")
+
+```
+
+*** 
+
+Some commentary about Frame 1.
+
+### Categorical Variables {data-height=500}
+
+```{r}
+plot(1:10, main="CHART A")
+
+plot(1:10, main="CHART B")
+
+
+```
+
+# Bivariate Analysis
+
+## Row {.tabset .tabset-fade}
+
+### Salary Vs. Company Location
+
+
+```{r}
+plot(1:10, main="CHART A")
+
+```
+
+### Salary Vs. Job Title
+
+```{r}
+plot(1:10, main="CHART A")
+
+```
+
+### Salary Vs. Experience Level
+
+```{r}
+plot(1:10, main="CHART A")
+
+plot(1:10, main="CHART B")
+
+```
+
+# Further Analysis
+
+## Row {.tabset .tabset-fade}
+
+### Entry Level Salaries Vs. Job Titles \| IN EUROPE \|
+
+```{r}
+plot(1:10, main="CHART A")
+```
+
+### Entry Level Salaries Vs. Company Location \| IN EUROPE \|
+
+```{r}
+plot(1:10, main="CHART A")
+
+plot(1:10, main="CHART B")
+```

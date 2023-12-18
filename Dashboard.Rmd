@@ -7,82 +7,554 @@ output:
     favicon: favicon.png
     theme:
       version: 4
-      bg: "#FFFFFF"
-      fg: "#000000" 
-      primary: "#5bc8af"
-      navbar-bg: "#5bc8af"
-      base_font: 
-        google: Prompt
-      heading_font:
-        google: Sen
-      code_font:
-        google: 
-          family: JetBrains Mono
-          local: false
+      bootswatch: minty
 ---
+```{r The Whole Code, include=FALSE}
+# Loading Everything I need
+
+#Loading Packages
+library(tidyverse)
+library(ggplot2)
+library(dplyr)
+library(sf)
+library(rnaturalearth)
+library(scales)
+library(viridis) 
+library(wordcloud)
+library(flexdashboard)
+
+# Importing the dataset from a local path in my computer
+data <- read.csv2("C:/Users/Samaher/Documents/DSE_R_Project/data.csv")
+
+# Converting it into a tibble
+data <- as.tibble(data)
+
+# Replacing abbreviations with full descriptions in the 'experience_level' column
+data$experience_level <- ifelse(data$experience_level == "EN", "entry level",
+                           ifelse(data$experience_level == "EX", "executive",
+                           ifelse(data$experience_level == "MI", "mid-level",
+                           ifelse(data$experience_level == "SE", "senior", data$experience_level))))
+
+# Replacing abbreviations with full descriptions in the 'employment_type' column
+data$employment_type <- ifelse(data$employment_type == "CT", "contract",
+                               ifelse(data$employment_type == "FL", "freelance",
+                                      ifelse(data$employment_type == "FT", "full-time",
+                                             ifelse(data$employment_type == "PT", "part-time", data$employment_type))))
+
+# Given exchange rate
+exchange_rate <- 0.92
+
+# Converting USD salaries to EUR
+data$salary_in_usd <- data$salary_in_usd * exchange_rate
+
+# Changing column name to better reflect this change
+names(data)[names(data) == "salary_in_usd"] <- "salary_in_eur"
+
+# Removing the salary and salary_currency columns
+data <- subset(data, select = -c(salary, salary_currency))
+
+# Defining a mapping of country codes to country names for company locations
+cl_country_mapping <- c(
+  AE = "United Arab Emirates",
+  AL = "Albania",
+  AM = "Armenia",
+  AR = "Argentina",
+  AS = "American Samoa",
+  AT = "Austria",
+  AU = "Australia",
+  BA = "Bosnia and Herzegovina",
+  BE = "Belgium",
+  BO = "Bolivia",
+  BR = "Brazil",
+  BS = "Bahamas",
+  CA = "Canada",
+  CF = "Central African Republic",
+  CH = "Switzerland",
+  CL = "Chile",
+  CN = "China",
+  CO = "Colombia",
+  CR = "Costa Rica",
+  CZ = "Czech Republic",
+  DE = "Germany",
+  DK = "Denmark",
+  DZ = "Algeria",
+  EE = "Estonia",
+  EG = "Egypt",
+  ES = "Spain",
+  FI = "Finland",
+  FR = "France",
+  GB = "United Kingdom",
+  GH = "Ghana",
+  GR = "Greece",
+  HK = "Hong Kong",
+  HN = "Honduras",
+  HR = "Croatia",
+  HU = "Hungary",
+  ID = "Indonesia",
+  IE = "Ireland",
+  IN = "India",
+  IQ = "Iraq",
+  IR = "Iran",
+  IT = "Italy",
+  JP = "Japan",
+  KE = "Kenya",
+  LT = "Lithuania",
+  LU = "Luxembourg",
+  LV = "Latvia",
+  MA = "Morocco",
+  MD = "Moldova",
+  MK = "North Macedonia",
+  MT = "Malta",
+  MX = "Mexico",
+  MY = "Malaysia",
+  NG = "Nigeria",
+  NL = "Netherlands",
+  NZ = "New Zealand",
+  PH = "Philippines",
+  PK = "Pakistan",
+  PL = "Poland",
+  PR = "Puerto Rico",
+  PT = "Portugal",
+  RO = "Romania",
+  RU = "Russia",
+  SE = "Sweden",
+  SG = "Singapore",
+  SI = "Slovenia",
+  SK = "Slovakia",
+  TH = "Thailand",
+  TR = "Turkey",
+  UA = "Ukraine",
+  US = "United States",
+  VN = "Vietnam"
+)
+
+# Replacing values in the 'company_location' column using the mapping created above
+data$company_location <- cl_country_mapping[data$company_location]
+
+# Defining a mapping of country codes to country names for employee residence
+
+er_country_mapping <- c(
+  AE = "United Arab Emirates",
+  AM = "Armenia",
+  AR = "Argentina",
+  AS = "American Samoa",
+  AT = "Austria",
+  AU = "Australia",
+  BA = "Bosnia and Herzegovina",
+  BE = "Belgium",
+  BG = "Bulgaria",
+  BO = "Bolivia",
+  BR = "Brazil",
+  CA = "Canada",
+  CF = "Central African Republic",
+  CH = "Switzerland",
+  CL = "Chile",
+  CN = "China",
+  CO = "Colombia",
+  CR = "Costa Rica",
+  CY = "Cyprus",
+  CZ = "Czech Republic",
+  DE = "Germany",
+  DK = "Denmark",
+  DO = "Dominican Republic",
+  DZ = "Algeria",
+  EE = "Estonia",
+  EG = "Egypt",
+  ES = "Spain",
+  FI = "Finland",
+  FR = "France",
+  GB = "United Kingdom",
+  GH = "Ghana",
+  GR = "Greece",
+  HK = "Hong Kong",
+  HN = "Honduras",
+  HR = "Croatia",
+  HU = "Hungary",
+  ID = "Indonesia",
+  IE = "Ireland",
+  IN = "India",
+  IQ = "Iraq",
+  IR = "Iran",
+  IT = "Italy",
+  JE = "Jersey",
+  JP = "Japan",
+  KE = "Kenya",
+  KW = "Kuwait",
+  LT = "Lithuania",
+  LU = "Luxembourg",
+  LV = "Latvia",
+  MA = "Morocco",
+  MD = "Moldova",
+  MK = "North Macedonia",
+  MT = "Malta",
+  MX = "Mexico",
+  MY = "Malaysia",
+  NG = "Nigeria",
+  NL = "Netherlands",
+  NZ = "New Zealand",
+  PH = "Philippines",
+  PK = "Pakistan",
+  PL = "Poland",
+  PR = "Puerto Rico",
+  PT = "Portugal",
+  RO = "Romania",
+  RS = "Serbia",
+  RU = "Russia",
+  SE = "Sweden",
+  SG = "Singapore",
+  SI = "Slovenia",
+  SK = "Slovakia",
+  TH = "Thailand",
+  TN = "Tunisia",
+  TR = "Turkey",
+  UA = "Ukraine",
+  US = "United States",
+  UZ = "Uzbekistan",
+  VN = "Vietnam"
+)
+
+# Replacing values in the 'employee_residence' column using the mapping created above
+data$employee_residence <- er_country_mapping[data$employee_residence]
+
+
+salary_distribution <- ggplot(data, aes(x = salary_in_eur)) +
+    geom_density(fill = "#5bc8af", color = "#202060") +
+    labs(title = "Density Plot of Salary in EUR", x = "Salary in EUR", y = "Density") +
+    scale_x_continuous(labels = scales::comma, breaks = seq(0, 500000, by = 100000)) # Modifying the x-axis scale to display breaks at intervals of 100,000 with comma formatting
+
+remote_distribution <- ggplot(data, aes(x = remote_ratio)) +
+    geom_density(fill = "#5bc8af", color = "#202060") +
+    labs(title = "Density Plot of Remote Ratio", x = "Remote Ratio", y = "Density")
+
+# Creating a table of company sizes and their frequency
+company_sizes_freq <- table(data$company_size)
+
+# Converting the table to a data frame
+company_sizes_df <- data.frame(company_size = names(company_sizes_freq), frequency = as.numeric(company_sizes_freq))
+
+# Defining a custom color palette (this step is optional, but, they're my favorite colors)
+custom_palette <- c("#5bc8af","#202060", "#b030b0","#6c91bf", "#602080")
+
+# Creating the pie chart for company sizes with percentages
+company_sizes_pie <- ggplot(company_sizes_df, aes(x = "", y = frequency, fill = company_size)) +
+  geom_bar(stat = "identity", width = 1, color = "white") +
+  coord_polar("y", start = 0) +
+  labs(title = "Company Size Distribution", fill = "Company Size") +
+  theme_void() +
+  scale_fill_manual(values = custom_palette) +
+  geom_text(aes(label = paste0(round((frequency/sum(frequency)) * 100), "%")),
+            position = position_stack(vjust = 0.5), color = "white" )
+
+# Creating a table of work years and their frequency
+work_years_freq <- table(data$work_year)
+
+# Converting the table to a data frame
+work_years_df <- data.frame(work_year = names(work_years_freq), frequency = as.numeric(work_years_freq))
+
+# Creating the pie chart for work years with percentages
+work_year_pie <- ggplot(work_years_df, aes(x = "", y = frequency, fill = work_year)) +
+  geom_bar(stat = "identity", width = 1, color = "white") +
+  coord_polar("y", start = 0) +
+  labs(title = "Work Year Distribution", fill = "Work Year") +
+  theme_void() +
+  scale_fill_manual(values = custom_palette) +
+  geom_text(aes(label = paste0(round((frequency/sum(frequency)) * 100), "%")),
+            position = position_stack(vjust = 0.5), color = "white" ) 
+
+# Creating a table of experience levels and their frequency
+experience_levels_freq <- table(data$experience_level)
+
+# Converting the table to a data frame
+experience_levels_df <- data.frame(experience_level = names(experience_levels_freq), frequency = as.numeric(experience_levels_freq))
+
+# Creating the pie chart for experience levels with percentages
+exp_level_pie <- ggplot(experience_levels_df, aes(x = "", y = frequency, fill = experience_level)) +
+  geom_bar(stat = "identity", width = 1, color = "white") +
+  coord_polar("y", start = 0) +
+  labs(title = "Experience Level Distribution", fill = "Experience Level") +
+  theme_void() +
+  scale_fill_manual(values = custom_palette) +
+  geom_text(aes(label = paste0(round((frequency/sum(frequency)) * 100), "%")),
+            position = position_stack(vjust = 0.5), color = "white" )
+
+# Creating a table of employment types and their frequency
+employment_types_freq <- table(data$employment_type)
+
+# Converting the table to a data frame
+employment_types_df <- data.frame(employment_type = names(employment_types_freq), frequency = as.numeric(employment_types_freq))
+
+# Creating the pie chart for employment types with percentages
+emp_type_pie <- ggplot(employment_types_df, aes(x = "", y = frequency, fill = employment_type)) +
+  geom_bar(stat = "identity", width = 1, color = "white") +
+  coord_polar("y", start = 0) +
+  labs(title = "Employment Type Distribution", fill = "Employment Type") +
+  theme_void() +
+  scale_fill_manual(values = custom_palette) +
+  geom_text(aes(label = paste0(round((frequency/sum(frequency)) * 100), "%")),
+            position = position_stack(vjust = 0.5), color = "white" )
+
+# Creating a df that has the company locations along with their freq
+company_location_df <- data %>%
+  group_by(company_location) %>%
+  summarise(frequency = n())
+
+# Getting world map data
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Merging company_location_df with world map data
+map_data <- merge(world, company_location_df, by.x = "name", by.y = "company_location", all.x = TRUE)
+
+# Plotting
+company_location_map <- ggplot() +
+  geom_sf(data = map_data, aes(fill = log(frequency + 1))) +
+  scale_fill_gradient(low = "#5bc8af", high = "#202060") +
+  theme_minimal()
+
+# Creating a data frame with employee residence locations and their frequency
+employee_residence_df <- data %>%
+  group_by(employee_residence) %>%
+  summarise(frequency = n())
+
+# Getting world map data
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Merging employee_residence_df with world map data
+map_data_residence <- merge(world, employee_residence_df, by.x = "name", by.y = "employee_residence", all.x = TRUE)
+
+# Plotting
+employee_residence_map <- ggplot() +
+  geom_sf(data = map_data_residence, aes(fill = log(frequency + 1))) +
+  scale_fill_gradient(low = "#5bc8af", high = "#202060") +
+  theme_minimal()
+
+# Creating a table of job titles and their frequency
+job_titles_freq <- table(data$job_title)
+
+# Converting the table to a data frame and sort by frequency
+job_titles_df <- data.frame(job_title = names(job_titles_freq), frequency = as.numeric(job_titles_freq))
+job_titles_df <- job_titles_df[order(job_titles_df$frequency, decreasing = TRUE), ]
+
+# Calculating percentages
+job_titles_df$percentage <- (job_titles_df$frequency / sum(job_titles_df$frequency)) * 100
+
+# Selecting the top 10 most occurring job titles
+top_10_jobs <- head(job_titles_df, 10)
+
+
+# Creating a bar plot for the top 10 job titles with percentages on the y-axis
+top_10_jobs_freq <- ggplot(top_10_jobs, aes(x = reorder(job_title, -frequency), y = percentage)) +
+  geom_bar(stat = "identity", fill = "#5bc8af") +
+  labs(title = "Top 10 Most Occurring Job Titles", x = "Job Titles", y = "Percentage") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Creating a dataframe with company locations and average salary for each country
+salary_location_df <- data %>%
+  group_by(company_location) %>%
+  summarise(avg_salary = mean(salary_in_eur, na.rm = TRUE)) %>% # Calculating the average salary
+  arrange(desc(avg_salary))  # Sorting by average salary in descending order
+
+# Getting world map data
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Merging company_location_df with world map data
+map_data <- merge(world, salary_location_df, by.x = "name", by.y = "company_location", all.x = TRUE)
+
+# Plotting
+salary_location_map <- ggplot() +
+  geom_sf(data = map_data, aes(fill = avg_salary)) +
+  scale_fill_gradient(low = "#5bc8af", high = "#202060") +
+  theme_minimal()
+
+# Selecting the top 10 countries
+top_10_countries <- head(salary_location_df, 10)
+
+# Creating a bar plot for top 10 countries with highest average salaries
+top_10_countries_salary <- ggplot(top_10_countries, aes(x = reorder(company_location, -avg_salary), y = avg_salary)) +
+  geom_bar(stat = "identity", fill = "#5bc8af") +
+  labs(title = "Top 10 Countries with Highest Average Salaries",
+       x = "Company Location", y = "Average Salary") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Creating a dataframe with job titles and their average salary
+salary_jobtitle_df <- data %>%
+  group_by(job_title) %>%
+  summarise(avg_salary = mean(salary_in_eur, na.rm = TRUE))  
+
+# Sorting by average salary in descending order to get the top salaries at the top
+salary_jobtitle_df <- salary_jobtitle_df[order(-salary_jobtitle_df$avg_salary),]
+
+# Selecting the top 10 job titles
+top_10_jobtitles <- head(salary_jobtitle_df, 10)
+
+# Creating a bar plot for the top 10 job titles
+top_10_jobtitles_salary <- ggplot(top_10_jobtitles, aes(x = reorder(job_title, -avg_salary), y = avg_salary)) +
+  geom_bar(stat = "identity", fill = "#5bc8af") +
+  labs(title = "Top 10 Job Titles by Average Salary", x = "Job Title" , y = "Average Salary" ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_y_continuous(labels = scales::comma, breaks = pretty_breaks(n = 10))  # Formatting the Y-axis labels
+
+# Reordering experience_level from entry level to executive
+data$experience_level <- factor(data$experience_level, levels = c("entry level", "mid-level", "senior", "executive"))
+
+# Creating boxplot for salaries across experience levels with custom colors
+salary_exp_boxplot <- ggplot(data, aes(x = experience_level, y = salary_in_eur, fill = experience_level)) +
+  geom_boxplot() +
+  labs(title = "Salaries across Experience Levels", x = "Experience Level", y = "Salary in EUR") +
+  scale_fill_manual(values = custom_palette) +  # Adding my favorite colors
+  theme_minimal() +
+  scale_y_continuous(labels = scales::comma, breaks = pretty_breaks(n = 10))
+
+# Calculate sample size for each experience level
+sample_size <- data %>% 
+  group_by(experience_level) %>%     
+  summarize(num = n())               
+
+# Joining the datasets based on the experience_level column
+data_with_size <- left_join(data, sample_size, by = "experience_level") %>%
+  mutate(myaxis = paste0(experience_level, "\n", "n=", num)) # Creating a new column 'myaxis' combining experience level and sample size
+
+# Plot
+salary_exp_violin <- ggplot(data_with_size, aes(x = myaxis, y = salary_in_eur, fill = experience_level)) +
+  geom_violin(width = 0.7, position = position_dodge(width = 0.6)) +
+  geom_boxplot(width = 0.1, color = "white", alpha = 0.2, position = position_dodge(width = 0.6)) +
+  scale_fill_manual(values = custom_palette) +  # Adding my favorite colors
+  theme_minimal() +
+  ggtitle("Salaries across Experience Levels") +
+  xlab("") +
+  ylab("Salary in EUR")+
+  scale_y_continuous(labels = scales::comma, breaks = pretty_breaks(n = 10))
+
+# Creating a vector of European countries
+european_countries <- c("Spain", "France", "Germany", "Italy", "United Kingdom", "Netherlands", "Sweden", "Norway", "Finland", "Denmark", "Belgium", "Austria", "Greece", "Switzerland", "Portugal", "Ireland", "Czech Republic", "Romania", "Hungary", "Poland", "Slovakia", "Croatia", "Bulgaria", "Estonia", "Lithuania", "Latvia", "Slovenia", "Luxembourg", "Malta", "Cyprus")
+
+# Filtering data for entry-level roles in Europe
+entry_level_europe <- data[data$experience_level == "entry level" & data$company_location %in% european_countries, ]
+
+# Calculating average salary for each job title in entry-level roles in Europe
+avg_salary_entry_level_europe <- aggregate(salary_in_eur ~ job_title, entry_level_europe, FUN = mean)
+
+# Sorting by average salary in descending order
+sorted_data_europe <- avg_salary_entry_level_europe[order(-avg_salary_entry_level_europe$salary_in_eur), ]
+
+# Selecting top 10 job titles for entry level in Europe
+top_10_jobtitles_entry_europe <- head(sorted_data_europe, 10)
+
+# Creating the bar plot
+top_10_jobttitle_entry_eu <- ggplot(top_10_jobtitles_entry_europe, aes(x = reorder(job_title, salary_in_eur), y = salary_in_eur)) +
+  geom_bar(stat = "identity", fill = "#5bc8af") +
+  labs(title = "Top 10 Job Titles with Highest Avg Salary (Entry Level in Europe)", x = "Job Title", y = "Average Salary") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  coord_flip()  # To display the bars horizontally
+
+
+# Calculating average salary for each country
+avg_salary_entry_level_europe <- entry_level_europe %>%
+  group_by(company_location) %>%
+  summarise(avg_salary = mean(salary_in_eur, na.rm = TRUE)) %>%
+  arrange(desc(avg_salary))  # Sorting by average salary in descending order
+
+# Getting world map data for Europe
+europe_map <- ne_countries(scale = "medium", continent = "Europe", returnclass = "sf")
+
+# Merge salary data with the map data for Europe
+map_data_europe <- merge(europe_map, avg_salary_entry_level_europe, by.x = "name", by.y = "company_location", all.x = TRUE)
+
+# Plotting map of Europe showing average salaries for entry level
+countries_entry_salary_eu <- ggplot() +
+  geom_sf(data = map_data_europe, aes(fill = avg_salary)) +
+  scale_fill_gradient(low = "#5bc8af", high = "#202060") +
+  labs(title = "Average Salary for Entry Level in European Countries") +
+  theme_minimal()
+
+# Sorting the data by average salary in descending order
+top_10_countries_eu <- head(avg_salary_entry_level_europe[order(-avg_salary_entry_level_europe$avg_salary), ], 10)
+
+# Creating a bar plot for the top 10 European countries with the highest average salaries
+top_10_eu_salary_entry <- ggplot(top_10_countries_eu, aes(x = reorder(company_location, avg_salary), y = avg_salary)) +
+  geom_bar(stat = "identity", fill = "#5bc8af") +
+  labs(title = "Top 10 European Countries with Highest Average Salaries (Entry Level)", x = "Country", y = "Average Salary") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  coord_flip()
+
+```
 
 # Univariate Analysis
 
 ## Row {.tabset .tabset-fade}
 
-### Chart A
+### Salary Distribution
 
 ```{r}
-plot(1:10, main = "Chart A")
+plot(salary_distribution)
 ```
 
-### Chart B
+### Salary Distribution
 
 ```{r}
-plot(1:10, main = "Chart A")
+plot(remote_distribution)
 ```
 
-### Chart C
+### Company Sizes
 
 ```{r}
-plot(1:10, main = "Chart A")
+plot(company_sizes_pie)
+```
+
+### Work Years
+
+```{r}
+plot(work_year_pie)
+```
+
+### Experience Levels
+
+```{r}
+plot(exp_level_pie)
+```
+
+### Employment Types
+
+```{r}
+plot(emp_type_pie)
 ```
 
 # Bivariate Analysis
 
 ## Row {.tabset .tabset-fade}
 
-### Chart A
+### Salary Vs. Company Location
+
 
 ```{r}
-plot(1:10, main = "Chart A")
+plot(salary_location_map)
 ```
 
-### Chart B
+### Salary Vs. Job Title
 
 ```{r}
-plot(1:10, main = "Chart A")
+plot(top_10_jobtitles_salary)
 ```
 
-### Chart C
+### Salary Vs. Experience Level
 
 ```{r}
-plot(1:10, main = "Chart A")
+plot(salary_exp_boxplot)
+
 ```
 
 # Further Analysis
 
 ## Row {.tabset .tabset-fade}
 
-### Chart A
+### Entry Level Salaries Vs. Job Titles \| IN EUROPE \|
 
 ```{r}
-plot(1:10, main = "Chart A")
+plot(top_10_jobttitle_entry_eu)
 ```
 
-### Chart B
+### Entry Level Salaries Vs. Company Location \| IN EUROPE \|
 
 ```{r}
-plot(1:10, main = "Chart A")
-```
-
-### Chart C
-
-```{r}
-plot(1:10, main = "Chart A")
+plot(top_10_eu_salary_entry)
 ```
