@@ -1,14 +1,15 @@
 ---
 title: "A Zoom Into Data-Related Jobs"
-output: html_notebook
+output: 
+  html_notebook:
+    toc: true
+    toc_depth: 5
+    toc_float: true
 ---
 
+**Name**: Samaher Brahem
 
-
-
-**Name**: Samaher Brahem 
-
-**Course**: Coding for DS & DM - R Module 
+**Course**: Coding for DS & DM - R Module
 
 **Professor**: Giancarlo Manzi
 
@@ -23,28 +24,27 @@ The *Salary of Data Scientists* dataset will be used for this analysis. It is ma
 
 #### **2.1 Features of the dataset**:
 
-- `work_year`: The year the salary was paid.
+-   `work_year`: The year the salary was paid.
 
-- `experience_level`: The level of work experience during the year
+-   `experience_level`: The level of work experience during the year
 
-- `employment_type`: the type of employment for the role
+-   `employment_type`: the type of employment for the role
 
-- `job_title`: The job in which you worked during the year.
+-   `job_title`: The job in which you worked during the year.
 
-- `salary`: The total gross amount of salary paid.
+-   `salary`: The total gross amount of salary paid.
 
-- `salary_currency`: The currency of the salary paid as an ISO 4217 currency code.
+-   `salary_currency`: The currency of the salary paid as an ISO 4217 currency code.
 
-- `salary_in_usd`: The salary in USD
+-   `salary_in_usd`: The salary in USD
 
-- `employee_residence`: the country of primary residence of the employee during the employment year as an ISO 3166 country code.
+-   `employee_residence`: the country of primary residence of the employee during the employment year as an ISO 3166 country code.
 
-- `remote_ratio`: The total amount of work done remotely
+-   `remote_ratio`: The total amount of work done remotely
 
-- `company_location`: The country of headquarters of the employer or contracting branch
+-   `company_location`: The country of headquarters of the employer or contracting branch
 
-- `company_size`: The average number of people who worked for the company during the year
-
+-   `company_size`: The average number of people who worked for the company during the year
 
 #### **2.2 Limits of the dataset**:
 
@@ -54,15 +54,13 @@ The information about how the data was collected and who collected it isn't clea
 
 ##### **2.2.2 Geographical Bias**:
 
-
 The dataset primarily comprises data from the United States, resulting in an imbalance where other countries are underrepresented. This skew might limit the depth and accuracy of analyses, potentially leading to an overemphasis on American-centric insights and a lack of comprehensive understanding regarding other regions or global perspectives.
-
 
 ### **3. Data Processing**
 
 #### **3. 1 Installing packages and opening libraries:**
 
-- tidyverse
+-   tidyverse
 
 ```{r}
 library(tidyverse)
@@ -72,6 +70,7 @@ library(sf)
 library(rnaturalearth)
 library(scales)
 library(viridis) 
+library(wordcloud)
 
 ```
 
@@ -86,7 +85,6 @@ data <- as.tibble(data)
 
 ```
 
-
 #### **3.3 Previewing the dataset:**
 
 ```{r}
@@ -98,13 +96,15 @@ str(data)
 # Displaying a sample of the data
 head(data)
 ```
-Now, let's check the dimensions of the dataset. 
+
+Now, let's check the dimensions of the dataset.
 
 ```{r}
 # Checking the dimensions of the dataset
 dim(data)
 ```
-The dataset has 3753 rows and 12 columns. This means we have 12 variables and 3753 observations. 
+
+The dataset has 3753 rows and 12 columns. This means we have 12 variables and 3753 observations.
 
 #### **3.4 Cleaning and formatting the dataset:**
 
@@ -112,19 +112,19 @@ The dataset has 3753 rows and 12 columns. This means we have 12 variables and 37
 
 There are 4 experience levels in this dataset:
 
-- EN = Entry Level
+-   EN = Entry Level
 
-- MI = Mid-Level
+-   MI = Mid-Level
 
-- SE = Senior
+-   SE = Senior
 
-- EX = Executive
-
+-   EX = Executive
 
 ```{r}
 # Checking how many experience levels are included in this dataset
 table(data$experience_level)
 ```
+
 Let's make those levels understandable by anyone who reads them!
 
 ```{r}
@@ -142,17 +142,18 @@ table(data$experience_level)
 
 There are 4 employment types in this dataset:
 
-- FT = full-time
+-   FT = full-time
 
-- PT = part-time
+-   PT = part-time
 
-- CT = contract
+-   CT = contract
 
-- FL = freelance
+-   FL = freelance
 
 ```{r}
 table(data$employment_type)
 ```
+
 I will replace those abbreviations with the full word for better readability.
 
 ```{r}
@@ -168,26 +169,21 @@ table(data$employment_type)
 
 ##### **3.4.3 Salaries:**
 
-When it comes to salaries, we can see that there are 3 columns: 
-1. `salary`
-2. `salary_currency`
-3. `salary_in_usd` 
+When it comes to salaries, we can see that there are 3 columns: 1. `salary` 2. `salary_currency` 3. `salary_in_usd`
 
-The salaries, stored in `salary` column, are collected in local currencies, mentioned in `salary_currency` column. Then, all those salaries were converted to USD and stored in `salary_in_usd`. 
+The salaries, stored in `salary` column, are collected in local currencies, mentioned in `salary_currency` column. Then, all those salaries were converted to USD and stored in `salary_in_usd`.
 
 ```{r}
 table(data$salary_currency)
 ```
 
-For the purpose of this study, it would be better to have the salaries in EUR. That's why I will replace the `salary_in_usd` column with `salary_in_eur` and convert the salaries to EUR. I will also remove the `salary` and `salary_currecny` columns since they are no longer needed. 
+For the purpose of this study, it would be better to have the salaries in EUR. That's why I will replace the `salary_in_usd` column with `salary_in_eur` and convert the salaries to EUR. I will also remove the `salary` and `salary_currecny` columns since they are no longer needed.
 
 The exchange rate for the conversion from USD to EUR is as follows:
 
-1 United States Dollar equals
-0.92 Euro
+1 United States Dollar equals 0.92 Euro
 
 P.S. The date of this conversion is: Dec 16, 09:12 UTC
-
 
 ```{r}
 # Given exchange rate
@@ -209,12 +205,11 @@ data <- subset(data, select = -c(salary, salary_currency))
 
 ###### **3.4.4.1 Company Location:**
 
-The column `company_location` reflects the countries where the companies are established. Those countries are written as abbreviations. While some country abbreviations are widely known, there are others that are less known. 
+The column `company_location` reflects the countries where the companies are established. Those countries are written as abbreviations. While some country abbreviations are widely known, there are others that are less known.
 
 ```{r}
 table(data$company_location)
 ```
-
 
 To ensure clarity, I decided to replace the abbreviations with the full country names.
 
@@ -299,15 +294,15 @@ data$company_location <- cl_country_mapping[data$company_location]
 
 ```
 
-
 ###### **3.4.4.2 Employee Residence:**
 
-Now, we'll do the same process for `employee_residence` column. 
+Now, we'll do the same process for `employee_residence` column.
 
 ```{r}
 #Checking which countries are included
 table(data$employee_residence)
 ```
+
 ```{r}
 # Defining a mapping of country codes to country names for employee residence
 
@@ -407,22 +402,22 @@ any(is.na(data))
 
 The outcome is `FALSE`, so there no null values to deal with. Let's move to the fun part!
 
-
 ### **4. Data Analysis**
 
 #### **4.1 Exploratory Data Analysis (EDA)**
 
 ##### **4.1.1 Overview and Summary Statistics**
 
-In this section, we will be examining the dataset's basic characteristics and computing summary statistics for better comprehension. 
+In this section, we will be examining the dataset's basic characteristics and computing summary statistics for better comprehension.
 
 ###### **4.1.1.1 Overview**
 
-Let's check again the dimensions and structure of the dataset after the the data processing phase. 
+Let's check again the dimensions and structure of the dataset after the the data processing phase.
 
 ```{r}
 dim(data)
 ```
+
 The dataset now has 3753 rows (observations) and 10 columns (variables).
 
 Let's check the columns' names and the structure of the processed dataset.
@@ -430,10 +425,10 @@ Let's check the columns' names and the structure of the processed dataset.
 ```{r}
 names(data)
 ```
+
 ```{r}
 str(data)
 ```
-
 
 ###### **4.1.1.2 Summary Statistics**
 
@@ -443,13 +438,14 @@ In this section, let's calculate summary statistics like mean, median, standard 
 # Checking the summary statistics for the salary variable
 summary(data$salary_in_eur)
 ```
-These statistics provide insights into the distribution of total gross salaries within the dataset. The minimum salary recorded is €4,721, while the maximum is €414,000. The median salary of €124,200 indicates that half of the recorded total gross salaries fall below this value and the other half above it. The mean salary (€126,499) is slightly higher than the median, indicating potential influence from higher salaries within the dataset. The interquartile range (IQR), between the 25th and 75th percentiles, spans from €87,400 to €161,000, encapsulating the middle 50% of the total gross salary data.
 
+These statistics provide insights into the distribution of total gross salaries within the dataset. The minimum salary recorded is €4,721, while the maximum is €414,000. The median salary of €124,200 indicates that half of the recorded total gross salaries fall below this value and the other half above it. The mean salary (€126,499) is slightly higher than the median, indicating potential influence from higher salaries within the dataset. The interquartile range (IQR), between the 25th and 75th percentiles, spans from €87,400 to €161,000, encapsulating the middle 50% of the total gross salary data.
 
 ```{r}
 # Checking the summary statistics for the remote ratio variable
 summary(data$remote_ratio)
 ```
+
 This shows that most of the values are concentrated towards the lower end, as indicated by the median and the 1st quartile both being 0.00. However, 25% of the data involves entirely remote positions. This means there's a mix of roles, from no remote work to completely remote setups, in the dataset.
 
 ##### **4.1.2 Univariate Analysis**
@@ -458,7 +454,6 @@ This shows that most of the values are concentrated towards the lower end, as in
 
 **A. Salary Distribution**
 
-
 ```{r}
 ggplot(data, aes(x = salary_in_eur)) +
     geom_density(fill = "#5bc8af", color = "#202060") +
@@ -466,6 +461,7 @@ ggplot(data, aes(x = salary_in_eur)) +
     scale_x_continuous(labels = scales::comma, breaks = seq(0, 500000, by = 100000)) # Modifying the x-axis scale to display breaks at intervals of 100,000 with comma formatting
 
 ```
+
 The density plot for the `salary_in_eur` variable reaffirms the statistical observations derived from the summary statistics. It visually depicts a right-skewed distribution, indicating that the majority of salaries are concentrated on the lower end of the spectrum. There's a notable peak at the lower salary values, with a gradual decrease in density as salaries increase. While the plot indicates a rightward skewness, it also showcases a few instances of higher salaries, although these are notably less frequent in the dataset.
 
 **B. Remote Ratio Distribution**
@@ -482,7 +478,6 @@ We can see that there are peaks at both ends (0% and 100%). The density plot rep
 ###### **4.1.2.2 Categorical Variables**
 
 **A. Company Size**
-
 
 ```{r}
 
@@ -531,6 +526,7 @@ ggplot(work_years_df, aes(x = "", y = frequency, fill = work_year)) +
             position = position_stack(vjust = 0.5), color = "white" ) 
 
 ```
+
 This pie chart depicts the dominance of 2023 and 2022 in the dataset compared to 2021 and 2020. 2023 has the most significant portion with 48%. 2022 follows with 44%. 2021 and 2020 have a relatively small representation in this data with the percentages 6% and 2% respectively.
 
 **C. Experience Level**
@@ -553,6 +549,7 @@ ggplot(experience_levels_df, aes(x = "", y = frequency, fill = experience_level)
             position = position_stack(vjust = 0.5), color = "white" )
 
 ```
+
 The pie chart shows that most individuals, around 67%, are in senior positions. About 21% are in middle-level roles, while entry-level positions make up 9%. Executive roles are the smallest group, just 3% of the dataset.
 
 **D. Employment Type**
@@ -575,6 +572,7 @@ ggplot(employment_types_df, aes(x = "", y = frequency, fill = employment_type)) 
             position = position_stack(vjust = 0.5), color = "white" )
 
 ```
+
 The majority of individuals, constituting approximately 99%, are categorized as "Full-time" employees. Now, let's dig a bit deeper to see the percentages of the other categories.
 
 ```{r}
@@ -610,6 +608,7 @@ ggplot() +
 
 
 ```
+
 The United States stands out as the most prominent location, reflecting a high occurrence frequency, followed by Canada, Spain, and several other countries that also have notable but comparatively lower representation.
 
 **F. Employee Residence**
@@ -635,6 +634,7 @@ ggplot() +
   theme_minimal()
 
 ```
+
 Looking at the distribution, it's apparent that the United States has the highest frequency, indicated by the darkest shade on the map. It's followed by Canada, Germany, the United Kingdom, and France, showing relatively high frequencies as well. The lighter shades across various countries denote lower frequencies. Countries such as Tunisia, Algeria, Iraq, Kuwait, American Samoa, Armenia, Bulgaria, Cyprus, Dominican Republic, Iran, Moldova, North Macedonia, Slovakia, and Uzbekistan have the lightest shades, representing the lowest frequency of employee residences.
 
 **G. Job Titles**
@@ -665,7 +665,6 @@ ggplot(top_10_jobs, aes(x = reorder(job_title, -frequency), y = percentage)) +
 
 The most dominant roles include "Data Engineer," "Data Scientist," and "Data Analyst," constituting a significant portion of the dataset's job titles. Additionally, positions like "Machine Learning Engineer," "Analytics Engineer," "Data Architect," and roles related to research, such as "Research Scientist" and "Research Engineer," also hold notable but comparatively smaller percentages.
 
-
 ##### **4.1.3 Bivariate Analysis**
 
 ###### **4.1.3.1 Salary Vs. Company Location**
@@ -692,7 +691,8 @@ ggplot() +
   theme_minimal()
 
 ```
-This map indicates that when it comes to average salaries for data employees, there's a big difference between countries. Let dig deeper to see which are the top 10 countries with the highest average salaries. 
+
+This map indicates that when it comes to average salaries for data employees, there's a big difference between countries. Let dig deeper to see which are the top 10 countries with the highest average salaries.
 
 ```{r}
 # Selecting the top 10 countries
@@ -705,10 +705,12 @@ ggplot(top_10_countries, aes(x = reorder(company_location, -avg_salary), y = avg
        x = "Company Location", y = "Average Salary") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
 Puerto Rico seems to offer the highest salaries among these top 10 countries. The United States, Russia, and Canada follow closely behind.
 
 ###### **4.1.3.2 Salary Vs. Job Title**
 
+In this section, we will see the top 10 job titles by average salary.
 
 ```{r}
 
@@ -746,6 +748,7 @@ ggplot(data, aes(x = experience_level, y = salary_in_eur, fill = experience_leve
   theme_minimal() +
   scale_y_continuous(labels = scales::comma, breaks = pretty_breaks(n = 10))
 ```
+
 The boxplot demonstrates variations in salary distributions across experience levels. The executive category exhibits the highest median salary among all categories, followed by the senior level. In contrast, the entry-level category displays the lowest median salary, notably less than €55,000 per year. This suggests a significant disparity in salary distributions across different experience levels, with higher experience levels generally commanding higher salaries.
 
 We can also include a violin plot to the boxplot to see both the distribution of the data and its summary statistics.
@@ -772,9 +775,87 @@ ggplot(data_with_size, aes(x = myaxis, y = salary_in_eur, fill = experience_leve
   scale_y_continuous(labels = scales::comma, breaks = pretty_breaks(n = 10))
 ```
 
+#### **4.2 Further Analysis**
 
-#### **4.2 Further Analysis (Based on EDA Findings)**
+In this section, I will focus on entry level roles in Europe and answer these questions:
 
+-   Which job titles has the highest average salary for entry level roles in Europe?
+-   Which country offer the highest average salary for entry level roles in Europe?
+
+##### **4.2.1 Entry Level Salaries Vs. Job Titles \| IN EUROPE \|**
+
+```{r}
+
+# Creating a vector of European countries
+european_countries <- c("Spain", "France", "Germany", "Italy", "United Kingdom", "Netherlands", "Sweden", "Norway", "Finland", "Denmark", "Belgium", "Austria", "Greece", "Switzerland", "Portugal", "Ireland", "Czech Republic", "Romania", "Hungary", "Poland", "Slovakia", "Croatia", "Bulgaria", "Estonia", "Lithuania", "Latvia", "Slovenia", "Luxembourg", "Malta", "Cyprus")
+
+# Filtering data for entry-level roles in Europe
+entry_level_europe <- data[data$experience_level == "entry level" & data$company_location %in% european_countries, ]
+
+# Calculating average salary for each job title in entry-level roles in Europe
+avg_salary_entry_level_europe <- aggregate(salary_in_eur ~ job_title, entry_level_europe, FUN = mean)
+
+# Creating a word cloud
+wordcloud(words = avg_salary_entry_level_europe$job_title, 
+          freq = avg_salary_entry_level_europe$salary_in_eur, 
+          min.freq = 1,
+          max.words = 50, 
+          random.order = FALSE, 
+          colors = custom_palette,
+          scale = c(2, 0.5))
+
+```
+
+This word cloud highlights that job titles such as AI Developer, Applied Data Scientist, and Research Engineer have higher average salaries for entry level experience level in Europe than job titles such as Computer Vision Software Engineer, Computer Vision Engineer, and ML Engineer. To make things clearer let's display the top 10 job titles.
+
+```{r}
+# Sorting by average salary in descending order
+sorted_data_europe <- avg_salary_entry_level_europe[order(-avg_salary_entry_level_europe$salary_in_eur), ]
+
+# Selecting top 10 job titles for entry level in Europe
+top_10_jobtitles_entry_europe <- head(sorted_data_europe, 10)
+
+# Creating the bar plot
+ggplot(top_10_jobtitles_entry_europe, aes(x = reorder(job_title, salary_in_eur), y = salary_in_eur)) +
+  geom_bar(stat = "identity", fill = "#5bc8af") +
+  labs(title = "Top 10 Job Titles with Highest Avg Salary (Entry Level in Europe)", x = "Job Title", y = "Average Salary") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  coord_flip()  # To display the bars horizontally
+
+```
+
+##### **4.2.2 Entry Level Salaries Vs. Company Location \| IN EUROPE \|**
+
+```{r}
+# Getting world map data for Europe
+europe_map <- ne_countries(scale = "medium", continent = "Europe", returnclass = "sf")
+
+# Merging salary data with the map data for Europe
+map_data_europe <- merge(europe_map, avg_salary_entry_level_europe, by.x = "name", by.y = "company_location", all.x = TRUE)
+
+# Plotting map of Europe showing average salaries for entry level
+ggplot() +
+  geom_sf(data = map_data_europe, aes(fill = avg_salary)) +
+  scale_fill_gradient(low = "#5bc8af", high = "#202060") +
+  labs(title = "Average Salary for Entry Level in European Countries") +
+  theme_minimal()
+```
+
+To gain a clearer perspective on our findings, let's visualize the data on a bar plot, focusing solely on the top 10 countries exhibiting the highest average salaries.
+
+```{r}
+# Sorting the data by average salary in descending order
+top_10_countries_eu <- head(avg_salary_entry_level_europe[order(-avg_salary_entry_level_europe$avg_salary), ], 10)
+
+# Creating a bar plot for the top 10 European countries with the highest average salaries
+ggplot(top_10_countries_eu, aes(x = reorder(company_location, avg_salary), y = avg_salary)) +
+  geom_bar(stat = "identity", fill = "#5bc8af") +
+  labs(title = "Top 10 European Countries with Highest Average Salaries (Entry Level)", x = "Country", y = "Average Salary") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  coord_flip()
+
+```
+
+The bar plot reveals a notable disparity in average salaries among European countries. Sweden appears to offer the highest average salary for entry-level roles, followed by Belgium and Germany. There's a substantial variation in salaries, with the top countries showcasing significantly higher averages compared to those at the bottom of the list, such as Luxembourg and Denmark.
 
 ### **5. Conclusion**
-

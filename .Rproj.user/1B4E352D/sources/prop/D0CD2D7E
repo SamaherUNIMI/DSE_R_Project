@@ -3,8 +3,12 @@
     "chunk_output_type": "inline",
     "source_window_id": "",
     "Source": "Source",
-    "cursorPosition": "749,0",
-    "scrollLine": "748",
+    "cursorPosition": "5,16",
+    "scrollLine": "2",
     "docOutlineVisible": "0",
-    "docOutlineSize": "336"
+    "docOutlineSize": "336",
+    "rmdVisualMode": "false",
+    "rmdVisualWrapConfigured": "true",
+    "rmdVisualModeLocation": "213:0",
+    "rmdVisualCollapsedChunks": ""
 }
