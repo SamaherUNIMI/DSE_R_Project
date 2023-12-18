@@ -1,0 +1,88 @@
+---
+title: "A Zoom Into Data-Related Jobs"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    favicon: favicon.png
+    theme:
+      version: 4
+      bg: "#FFFFFF"
+      fg: "#000000" 
+      primary: "#5bc8af"
+      navbar-bg: "#5bc8af"
+      base_font: 
+        google: Prompt
+      heading_font:
+        google: Sen
+      code_font:
+        google: 
+          family: JetBrains Mono
+          local: false
+---
+
+# Univariate Analysis
+
+## Row {.tabset .tabset-fade}
+
+### Chart A
+
+```{r}
+plot(1:10, main = "Chart A")
+```
+
+### Chart B
+
+```{r}
+plot(1:10, main = "Chart A")
+```
+
+### Chart C
+
+```{r}
+plot(1:10, main = "Chart A")
+```
+
+# Bivariate Analysis
+
+## Row {.tabset .tabset-fade}
+
+### Chart A
+
+```{r}
+plot(1:10, main = "Chart A")
+```
+
+### Chart B
+
+```{r}
+plot(1:10, main = "Chart A")
+```
+
+### Chart C
+
+```{r}
+plot(1:10, main = "Chart A")
+```
+
+# Further Analysis
+
+## Row {.tabset .tabset-fade}
+
+### Chart A
+
+```{r}
+plot(1:10, main = "Chart A")
+```
+
+### Chart B
+
+```{r}
+plot(1:10, main = "Chart A")
+```
+
+### Chart C
+
+```{r}
+plot(1:10, main = "Chart A")
+```
