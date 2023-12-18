@@ -308,6 +308,7 @@ map_data <- merge(world, company_location_df, by.x = "name", by.y = "company_loc
 company_location_map <- ggplot() +
   geom_sf(data = map_data, aes(fill = log(frequency + 1))) +
   scale_fill_gradient(low = "#5bc8af", high = "#202060") +
+  labs(title="Company Location Distribution") +
   theme_minimal()
 
 # Creating a data frame with employee residence locations and their frequency
@@ -325,6 +326,7 @@ map_data_residence <- merge(world, employee_residence_df, by.x = "name", by.y = 
 employee_residence_map <- ggplot() +
   geom_sf(data = map_data_residence, aes(fill = log(frequency + 1))) +
   scale_fill_gradient(low = "#5bc8af", high = "#202060") +
+  labs(title="Employee Residence Distribution") +
   theme_minimal()
 
 # Creating a table of job titles and their frequency
@@ -363,6 +365,7 @@ map_data <- merge(world, salary_location_df, by.x = "name", by.y = "company_loca
 salary_location_map <- ggplot() +
   geom_sf(data = map_data, aes(fill = avg_salary)) +
   scale_fill_gradient(low = "#5bc8af", high = "#202060") +
+  labs(title="Average Salary Vs. Company Location") +
   theme_minimal()
 
 # Selecting the top 10 countries
@@ -525,7 +528,7 @@ plot(emp_type_pie)
 
 ### Salary Vs. Company Location
 
-```{r, fig.width=12, fig.height=9}
+```{r}
 plot(salary_location_map)
 ```
 

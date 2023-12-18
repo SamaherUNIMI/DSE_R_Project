@@ -3,8 +3,9 @@ title: "A Zoom Into Data-Related Jobs"
 output: 
   html_notebook:
     toc: true
-    toc_depth: 5
+    toc_depth: 6
     toc_float: true
+    css: styles.css
 ---
 
 **Name**: Samaher Brahem
@@ -604,8 +605,10 @@ map_data <- merge(world, company_location_df, by.x = "name", by.y = "company_loc
 ggplot() +
   geom_sf(data = map_data, aes(fill = log(frequency + 1))) +
   scale_fill_gradient(low = "#5bc8af", high = "#202060") +
+  labs(title="Company Location Distribution") +
   theme_minimal()
 ```
+
 The United States stands out as the most prominent location, reflecting a high occurrence frequency, followed by Canada, Spain, and several other countries that also have notable but comparatively lower representation.
 
 **F. Employee Residence**
@@ -628,9 +631,11 @@ map_data_residence <- merge(world, employee_residence_df, by.x = "name", by.y = 
 ggplot() +
   geom_sf(data = map_data_residence, aes(fill = log(frequency + 1))) +
   scale_fill_gradient(low = "#5bc8af", high = "#202060") +
+  labs(title="Employee Residence Distribution") +
   theme_minimal()
 
 ```
+
 Looking at the distribution, it's apparent that the United States has the highest frequency, indicated by the darkest shade on the map. It's followed by Canada, Germany, the United Kingdom, and France, showing relatively high frequencies as well. The lighter shades across various countries denote lower frequencies. Countries such as Tunisia, Algeria, Iraq, Kuwait, American Samoa, Armenia, Bulgaria, Cyprus, Dominican Republic, Iran, Moldova, North Macedonia, Slovakia, and Uzbekistan have the lightest shades, representing the lowest frequency of employee residences.
 
 **G. Job Titles**
@@ -684,6 +689,7 @@ map_data <- merge(world, salary_location_df, by.x = "name", by.y = "company_loca
 ggplot() +
   geom_sf(data = map_data, aes(fill = avg_salary)) +
   scale_fill_gradient(low = "#5bc8af", high = "#202060") +
+  labs(title="Average Salary Vs. Company Location") +
   theme_minimal()
 
 ```
@@ -729,6 +735,7 @@ ggplot(top_10_jobtitles, aes(x = reorder(job_title, -avg_salary), y = avg_salary
   theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
   scale_y_continuous(labels = scales::comma, breaks = pretty_breaks(n = 10))  # Formatting the Y-axis labels
 ```
+
 We can see that the top job title with the highest average salaries is Data Science Tech Lead, followed by other job titles such as Cloud Data Architect, Data Lead, Data Analytics Lead, and Principal Data Scientist.
 
 ###### **4.1.3.3 Salary Vs. Experience Level**
@@ -820,6 +827,7 @@ ggplot(top_10_jobtitles_entry_europe, aes(x = reorder(job_title, salary_in_eur),
   coord_flip()  # To display the bars horizontally
 
 ```
+
 AI Developers seem to have the highest average salaries in Europe among the other data-related roles, followed by Research Engineer, and Applied Data Scientist.
 
 ##### **4.2.2 Entry Level Salaries Vs. Company Location \| IN EUROPE \|**
@@ -846,6 +854,7 @@ ggplot() +
   theme_minimal()
 
 ```
+
 To gain a clearer perspective on our findings, let's visualize the data on a bar plot, focusing solely on the top 10 countries exhibiting the highest average salaries.
 
 ```{r}
@@ -860,10 +869,11 @@ ggplot(top_10_countries_eu, aes(x = reorder(company_location, avg_salary), y = a
   coord_flip()
 
 ```
+
 The bar plot reveals a notable disparity in average salaries among European countries. Sweden appears to offer the highest average salary for entry-level roles, followed by Belgium and Germany. There's a substantial variation in salaries, with the top countries showcasing significantly higher averages compared to those at the bottom of the list, such as Luxembourg and Denmark.
 
 ### **5. Conclusion**
 
 Throughout this project, we took a close look at how salaries differ across jobs, experience levels, and countries worldwide. Our exploration highlighted significant disparities: certain roles tend to yield notably higher or lower earnings, and this discrepancy amplifies with experience, with senior and executive positions commanding higher salaries. The geographical element also plays a pivotal role, showcasing substantial variations in earnings across different countries. Using various visualization techniques such as box plots, violin plots, bar plots, and maps helped us see these differences clearly. This study underlines the substantial impact of job type, experience level, and location on income. Looking forward, deeper investigations into the underlying factors behind these disparities, such as industry specifics or skill demands, could provide valuable insights. Additionally, studying salary fluctuations over time might offer further perspectives on these earning differentials. Ultimately, this analysis reveals that where one works, the job they do, and their experience significantly influence their earnings.
 
-Please check the `Dashboard` file to the static dashboard I created using flexdashboard.
+Please check the `Dashboard` file to see the dashboard I created using flexdashboard.

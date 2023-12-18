@@ -1,0 +1,31 @@
+h1 {
+  color: #5bc8af; 
+}
+
+h2 {
+  color: #202060; 
+}
+
+h3 {
+  color: #202060; 
+}
+
+h4 {
+  color: #202060; 
+}
+
+h5 {
+  color: #202060; 
+}
+
+
+/* Change the color of TOC links */
+#TOC ul li a {
+  color: #202060; 
+}
+
+/* Change the color of TOC section headers */
+#TOC ul li {
+  color: #202060; 
+}
+
